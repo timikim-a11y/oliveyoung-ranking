@@ -313,8 +313,9 @@ function renderList(){
   const latest=fData[fData.length-1];
   let prods=latest.products||[];
 
-  // ★ 핵심: 카테고리 필터 — 해당 카테고리로 크롤링된 데이터만 표시
-  if(curCat!=="전체") prods=prods.filter(p=>p.category===curCat);
+  // ★ 핵심: 항상 해당 카테고리로 크롤링된 데이터만 표시
+  // "전체"도 올리브영의 "전체" 탭에서 크롤링한 100개만 보여줌
+  prods=prods.filter(p=>p.category===curCat);
 
   const q=document.getElementById("q").value.trim().toLowerCase();
   if(q) prods=prods.filter(p=>(p.brand||"").toLowerCase().includes(q)||(p.name||"").toLowerCase().includes(q));
