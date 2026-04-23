@@ -7,742 +7,416 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    /* 올리브영 브랜드 컬러 */
-    --oy-yellow: #F5FF50;         /* 리브랜딩 포인트 컬러 */
-    --oy-yellow-bg: #F5FFB0;      /* 리브랜딩 BG (40% 투명도) */
-    --oy-yellow-soft: #FAFFD6;    /* 매우 연한 노랑 */
-    --oy-gray: rgb(180,180,160);  /* 서브컬러 */
-    --oy-black: #151515;          /* 기본 검정 */
-    --oy-black-70: rgba(21,21,21,0.7);
-    --oy-black-50: rgba(21,21,21,0.5);
-    --oy-black-30: rgba(21,21,21,0.3);
-    --oy-black-10: rgba(21,21,21,0.1);
+:root{--oy-yellow:#F5FF50;--oy-yellow-bg:#F5FFB0;--oy-yellow-soft:#FAFFD6;--oy-black:#151515;--oy-bk7:rgba(21,21,21,.7);--oy-bk5:rgba(21,21,21,.5);--oy-bk3:rgba(21,21,21,.3);--oy-bk1:rgba(21,21,21,.1);--bg:#f7f7f5;--card:#fff;--border:#e8e8e4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-black);-webkit-font-smoothing:antialiased;min-height:100vh}
 
-    --bg: #f7f7f5;
-    --card: #ffffff;
-    --border: #e8e8e4;
-    --text: var(--oy-black);
-    --text-sub: var(--oy-black-50);
-    --text-muted: var(--oy-black-30);
-    --accent: var(--oy-black);
-    --green: #22c55e;
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --orange: #f59e0b;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-  }
+/* Header */
+.hd{background:var(--oy-black);padding:16px 32px;display:flex;align-items:center;gap:14px}
+.hd h1{font-size:16px;font-weight:700;color:#fff}
+.hd p{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
+.hd-status{margin-left:auto;font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:6px}
+.hd-status .dot{width:7px;height:7px;border-radius:50%;background:var(--oy-yellow);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  /* ── Header ── */
-  .header {
-    background: var(--oy-black);
-    padding: 16px 32px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .header-text h1 {
-    font-size: 16px; font-weight: 700; color: #fff;
-    letter-spacing: -0.3px;
-  }
-  .header-text p {
-    font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px;
-  }
-  .header-status {
-    margin-left: auto; font-size: 11px; color: rgba(255,255,255,0.4);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .header-status .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--oy-yellow);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+/* Period filter */
+.pf{background:var(--card);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pf-label{font-size:13px;font-weight:600;flex-shrink:0}
+.pf-btns{display:flex;gap:5px;flex-wrap:wrap}
+.pf-btn{padding:5px 13px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--oy-bk5);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.pf-btn:hover{border-color:var(--oy-bk3);color:var(--oy-black)}
+.pf-btn.on{background:var(--oy-black);color:var(--oy-yellow);border-color:var(--oy-black);font-weight:700}
+.dr{display:flex;align-items:center;gap:5px;margin-left:8px;padding-left:10px;border-left:1px solid var(--border)}
+.dr input{padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;font-family:inherit;background:var(--bg);outline:none}
+.dr input:focus{border-color:var(--oy-black)}
+.dr span{font-size:11px;color:var(--oy-bk3)}
+.dr button{padding:4px 10px;border-radius:5px;border:none;background:var(--oy-black);color:var(--oy-yellow);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
 
-  /* ── Month Filter ── */
-  .month-filter {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 32px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .month-label {
-    font-size: 13px; font-weight: 600; color: var(--oy-black);
-    flex-shrink: 0;
-  }
-  .month-scroll {
-    display: flex; gap: 6px; overflow-x: auto;
-    scrollbar-width: none; -webkit-overflow-scrolling: touch;
-  }
-  .month-scroll::-webkit-scrollbar { display: none; }
-  .month-btn {
-    padding: 6px 14px; border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--card); color: var(--oy-black-50);
-    font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: all 0.15s;
-    font-family: inherit; white-space: nowrap;
-  }
-  .month-btn:hover { border-color: var(--oy-black-30); color: var(--oy-black); }
-  .month-btn.active {
-    background: var(--oy-black);
-    color: var(--oy-yellow); border-color: var(--oy-black);
-    font-weight: 700;
-  }
+/* Categories */
+.cats{background:var(--card);border-bottom:1px solid var(--border);padding:12px 32px}
+.cats-label{font-size:12px;color:var(--oy-bk5);margin-bottom:8px}
+.cats-grid{display:flex;flex-wrap:wrap;gap:6px}
+.cat-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--oy-bk7);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+.cat-btn:hover{border-color:var(--oy-bk3);color:var(--oy-black)}
+.cat-btn.on{background:var(--oy-yellow);color:var(--oy-black);border-color:var(--oy-yellow);font-weight:700}
 
-  /* ── Categories ── */
-  .categories {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 32px;
-  }
-  .cat-label {
-    font-size: 13px; color: var(--text-sub); margin-bottom: 10px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .cat-grid { display: flex; flex-wrap: wrap; gap: 7px; }
-  .cat-btn {
-    padding: 7px 15px; border-radius: 7px;
-    border: 1px solid var(--border);
-    background: var(--card); color: var(--oy-black-70);
-    font-size: 12.5px; font-weight: 500;
-    cursor: pointer; transition: all 0.15s; font-family: inherit;
-  }
-  .cat-btn:hover { border-color: var(--oy-black-30); color: var(--oy-black); }
-  .cat-btn.active {
-    background: var(--oy-yellow);
-    color: var(--oy-black); border-color: var(--oy-yellow);
-    font-weight: 700;
-  }
+/* Search */
+.sb{background:var(--card);border-bottom:1px solid var(--border);padding:9px 32px;display:flex;gap:8px;align-items:center}
+.sb input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:var(--bg);outline:none}
+.sb input:focus{border-color:var(--oy-black)}
+.sb button{padding:8px 16px;background:var(--oy-black);color:var(--oy-yellow);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 
-  /* ── Search ── */
-  .search-bar {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 32px;
-    display: flex; gap: 10px; align-items: center;
-  }
-  .search-bar input {
-    flex: 1; padding: 9px 14px;
-    border: 1px solid var(--border); border-radius: 7px;
-    font-size: 13px; font-family: inherit;
-    background: var(--bg); outline: none; transition: border 0.2s;
-  }
-  .search-bar input:focus { border-color: var(--oy-black); }
-  .search-btn {
-    padding: 9px 18px;
-    background: var(--oy-black); color: var(--oy-yellow);
-    border: none; border-radius: 7px;
-    font-size: 12px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
-  }
+/* Main */
+.main{display:flex;padding:14px 32px 40px;gap:14px;min-height:calc(100vh - 260px)}
 
-  /* ── Main Layout ── */
-  .main {
-    display: flex; padding: 16px 32px 40px; gap: 16px;
-    min-height: calc(100vh - 250px);
-  }
+/* Left */
+.pl{width:360px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
+.pl-hd{padding:12px 16px;border-bottom:1px solid #f0f0ec;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;background:var(--oy-yellow-soft)}
+.pl-hd .cnt{font-weight:400;color:var(--oy-bk5);font-size:12px}
+.rl{flex:1;overflow-y:auto;max-height:620px}
+.ri{display:flex;align-items:center;gap:7px;padding:10px 16px;border-bottom:1px solid #f7f7f5;cursor:pointer;transition:all .1s;border-left:3px solid transparent}
+.ri:hover{background:var(--oy-yellow-soft)}
+.ri.on{background:var(--oy-yellow-soft);border-left-color:var(--oy-black)}
+.rn{width:22px;text-align:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--oy-bk3)}
+.ri:nth-child(-n+3) .rn{color:var(--oy-black);font-size:14px}
+.rc{width:24px;text-align:center;font-size:10px;font-weight:600}
+.rc.up{color:#ef4444}.rc.dn{color:#3b82f6}.rc.sm{color:var(--oy-bk3)}.rc.nw{color:#f59e0b;font-weight:700}
+.rname{flex:1;min-width:0;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbrand{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
 
-  /* ── Left Panel ── */
-  .panel-left {
-    width: 370px; flex-shrink: 0;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    display: flex; flex-direction: column; overflow: hidden;
-  }
-  .panel-header {
-    padding: 13px 18px;
-    border-bottom: 1px solid #f0f0ec;
-    font-size: 13px; font-weight: 700;
-    display: flex; align-items: center; gap: 8px;
-    background: var(--oy-yellow-soft);
-  }
-  .panel-header .count { font-weight: 400; color: var(--text-sub); font-size: 12px; }
-  .rank-list { flex: 1; overflow-y: auto; max-height: 620px; }
-  .rank-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 11px 18px;
-    border-bottom: 1px solid #f7f7f5;
-    cursor: pointer; transition: all 0.1s;
-    border-left: 3px solid transparent;
-  }
-  .rank-item:hover { background: var(--oy-yellow-soft); }
-  .rank-item.active {
-    background: var(--oy-yellow-soft);
-    border-left-color: var(--oy-black);
-  }
-  .rank-num {
-    width: 24px; text-align: center;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700; font-size: 14px; color: var(--oy-black-30);
-  }
-  .rank-item:nth-child(1) .rank-num,
-  .rank-item:nth-child(2) .rank-num,
-  .rank-item:nth-child(3) .rank-num { color: var(--oy-black); font-size: 15px; }
-  .rank-change { width: 26px; text-align: center; font-size: 10px; font-weight: 600; }
-  .rank-change.up { color: var(--red); }
-  .rank-change.down { color: var(--blue); }
-  .rank-change.same { color: var(--text-muted); }
-  .rank-change.new { color: var(--orange); font-weight: 700; }
-  .rank-name {
-    flex: 1; min-width: 0; font-size: 12.5px; font-weight: 500;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .rank-brand {
-    padding: 3px 9px; border-radius: 4px;
-    font-size: 10.5px; font-weight: 600; white-space: nowrap;
-  }
+/* Right */
+.pr{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
+.ch-hd{padding:14px 20px;border-bottom:1px solid #f0f0ec}
+.ch-title{font-size:15px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.ch-title .tag{padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;background:var(--oy-yellow);color:var(--oy-black)}
+.ch-sub{font-size:12px;color:var(--oy-bk5)}
+.ch-legend{padding:7px 20px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--oy-bk5);border-bottom:1px solid #f7f7f5}
+.lg-i{display:flex;align-items:center;gap:4px}
+.lg-l{width:12px;height:3px;border-radius:2px}
+.ch-area{flex:1;padding:14px 14px 8px;position:relative;min-height:380px}
+.ch-empty{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--oy-bk3);font-size:13px}
+.ch-empty .ic{font-size:36px}
+.cmp-tog{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--oy-bk5);cursor:pointer;margin-left:auto}
+.tog{width:32px;height:17px;border-radius:9px;background:#ddd;position:relative;transition:background .2s;cursor:pointer}
+.tog.on{background:var(--oy-black)}
+.tog-k{width:13px;height:13px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tog.on .tog-k{left:17px;background:var(--oy-yellow)}
 
-  /* ── Right Panel ── */
-  .panel-right {
-    flex: 1; background: var(--card);
-    border: 1px solid var(--border); border-radius: 12px;
-    display: flex; flex-direction: column; overflow: hidden;
-  }
-  .chart-header {
-    padding: 16px 22px; border-bottom: 1px solid #f0f0ec;
-  }
-  .chart-title {
-    font-size: 15px; font-weight: 700; margin-bottom: 4px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .chart-title .tag {
-    padding: 3px 10px; border-radius: 4px;
-    font-size: 11px; font-weight: 600;
-    background: var(--oy-yellow); color: var(--oy-black);
-  }
-  .chart-subtitle { font-size: 12px; color: var(--text-sub); }
-  .chart-legend {
-    padding: 8px 22px; display: flex; gap: 14px; flex-wrap: wrap;
-    font-size: 11px; color: var(--text-sub);
-    border-bottom: 1px solid #f7f7f5;
-  }
-  .legend-item { display: flex; align-items: center; gap: 5px; }
-  .legend-line { width: 14px; height: 3px; border-radius: 2px; }
-  .chart-area { flex: 1; padding: 16px 16px 10px; position: relative; min-height: 380px; }
-  .chart-empty {
-    height: 100%; display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 8px; color: var(--text-muted); font-size: 13px;
-  }
-  .chart-empty .icon { font-size: 36px; }
-  .compare-toggle {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 12px; color: var(--oy-black-50); cursor: pointer; margin-left: auto;
-  }
-  .toggle-track {
-    width: 34px; height: 18px; border-radius: 9px;
-    background: #ddd; position: relative; transition: background 0.2s; cursor: pointer;
-  }
-  .toggle-track.on { background: var(--oy-black); }
-  .toggle-knob {
-    width: 14px; height: 14px; border-radius: 50%;
-    background: #fff; position: absolute; top: 2px; left: 2px;
-    transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-  }
-  .toggle-track.on .toggle-knob { left: 18px; background: var(--oy-yellow); }
+.ld{display:flex;align-items:center;justify-content:center;height:200px;color:var(--oy-bk3);font-size:13px;flex-direction:column;gap:12px}
+.sp{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--oy-black);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ndb{background:#fffbe6;border:1px solid #f5edc8;border-radius:8px;padding:14px 20px;margin:14px 32px;font-size:13px;color:#8a7400;display:flex;align-items:flex-start;gap:8px}
 
-  /* ── Loading / No data ── */
-  .loading {
-    display: flex; align-items: center; justify-content: center;
-    height: 200px; color: var(--text-muted); font-size: 13px;
-    flex-direction: column; gap: 12px;
-  }
-  .spinner {
-    width: 28px; height: 28px; border: 3px solid var(--border);
-    border-top-color: var(--oy-black); border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .no-data-banner {
-    background: #fffbe6; border: 1px solid #f5edc8; border-radius: 8px;
-    padding: 16px 22px; margin: 16px 32px;
-    font-size: 13px; color: #8a7400;
-    display: flex; align-items: flex-start; gap: 10px;
-  }
-
-  /* ── Responsive ── */
-  @media (max-width:900px) {
-    .main { flex-direction: column; padding: 12px; }
-    .panel-left { width: 100%; }
-    .header,.categories,.search-bar,.month-filter { padding-left:16px; padding-right:16px; }
-  }
+@media(max-width:900px){
+  .main{flex-direction:column;padding:10px}
+  .pl{width:100%}
+  .hd,.cats,.sb,.pf{padding-left:14px;padding-right:14px}
+  .dr{margin-left:0;padding-left:0;border-left:none;margin-top:6px;width:100%}
+}
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-text">
+<div class="hd">
+  <div>
     <h1>올리브영 브랜드 랭킹</h1>
     <p>브랜드별 상품 랭킹 추이를 차트로 비교합니다</p>
   </div>
-  <div class="header-status">
-    <span class="dot"></span>
-    <span id="lastUpdate">데이터 로딩 중...</span>
+  <div class="hd-status"><span class="dot"></span><span id="lastUpdate">로딩 중...</span></div>
+</div>
+
+<div class="pf">
+  <div class="pf-label">📅 기간</div>
+  <div class="pf-btns" id="pfBtns"></div>
+  <div class="dr">
+    <input type="date" id="dFrom">
+    <span>~</span>
+    <input type="date" id="dTo">
+    <button onclick="applyRange()">적용</button>
   </div>
 </div>
 
-<!-- Month Filter -->
-<div class="month-filter">
-  <div class="month-label">📅 월별</div>
-  <div class="month-scroll" id="monthScroll"></div>
+<div class="cats">
+  <div class="cats-label">🏷 카테고리</div>
+  <div class="cats-grid" id="catGrid"></div>
 </div>
 
-<!-- Categories -->
-<div class="categories">
-  <div class="cat-label">🏷 카테고리</div>
-  <div class="cat-grid" id="catGrid"></div>
+<div class="sb">
+  <span style="font-size:15px;color:var(--oy-bk3)">🔍</span>
+  <input type="text" id="q" placeholder="상품명 또는 브랜드 검색">
+  <button onclick="renderList()">검색</button>
 </div>
 
-<!-- Search -->
-<div class="search-bar">
-  <span style="font-size:16px;color:var(--text-muted)">🔍</span>
-  <input type="text" id="searchInput" placeholder="상품명을 입력하세요" />
-  <button class="search-btn" onclick="applySearch()">검색</button>
+<div class="ndb" id="ndb" style="display:none">
+  <span style="font-size:15px">⚠️</span>
+  <div><strong>아직 수집된 데이터가 없습니다.</strong><br>GitHub Actions에서 "Run workflow"를 실행해주세요.</div>
 </div>
 
-<!-- No data -->
-<div class="no-data-banner" id="noDataBanner" style="display:none">
-  <span style="font-size:16px">⚠️</span>
-  <div>
-    <strong>아직 수집된 데이터가 없습니다.</strong><br>
-    GitHub Actions 크롤링이 첫 실행되면 자동으로 데이터가 표시됩니다.
-  </div>
-</div>
-
-<!-- Main -->
 <div class="main">
-  <div class="panel-left">
-    <div class="panel-header">
-      📊 <span id="panelTitle">랭킹</span> <span class="count" id="panelCount"></span>
-    </div>
-    <div class="rank-list" id="rankList">
-      <div class="loading"><div class="spinner"></div>데이터 로딩 중...</div>
-    </div>
+  <div class="pl">
+    <div class="pl-hd">📊 <span id="pTitle">랭킹</span> <span class="cnt" id="pCnt"></span></div>
+    <div class="rl" id="rl"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
   </div>
-
-  <div class="panel-right">
-    <div class="chart-header">
+  <div class="pr">
+    <div class="ch-hd">
       <div style="display:flex;align-items:flex-start;justify-content:space-between">
         <div>
-          <div class="chart-title">
-            <span id="chartCategory">[전체]</span> 랭킹 트렌드
-            <span class="tag" id="chartTag">전체</span>
-          </div>
-          <div class="chart-subtitle" id="chartSubtitle">왼쪽 리스트에서 상품을 선택하세요</div>
+          <div class="ch-title"><span id="chCat">[전체]</span> 랭킹 트렌드 <span class="tag" id="chTag">전체</span></div>
+          <div class="ch-sub" id="chSub">상품을 선택하세요</div>
         </div>
-        <div class="compare-toggle" onclick="toggleCompare()">
-          📊 여러상품 비교
-          <div class="toggle-track" id="compareToggle"><div class="toggle-knob"></div></div>
+        <div class="cmp-tog" onclick="toggleCmp()">
+          📊 비교
+          <div class="tog" id="cmpTog"><div class="tog-k"></div></div>
         </div>
       </div>
     </div>
-    <div class="chart-legend">
-      <span class="legend-item"><span class="legend-line" style="background:#22c55e"></span> 정상판매</span>
-      <span class="legend-item"><span class="legend-line" style="background:#ef4444"></span> 할인</span>
-      <span class="legend-item"><span class="legend-line" style="background:#151515"></span> 품절</span>
-      <span class="legend-item"><span class="legend-line" style="background:#9ca3af"></span> 순위권 밖</span>
+    <div class="ch-legend">
+      <span class="lg-i"><span class="lg-l" style="background:#22c55e"></span>정상판매</span>
+      <span class="lg-i"><span class="lg-l" style="background:#ef4444"></span>할인</span>
+      <span class="lg-i"><span class="lg-l" style="background:#151515"></span>품절</span>
+      <span class="lg-i"><span class="lg-l" style="background:#9ca3af"></span>순위권 밖</span>
     </div>
-    <div class="chart-area">
-      <canvas id="rankChart"></canvas>
-      <div class="chart-empty" id="chartEmpty">
-        <span class="icon">📈</span>
-        왼쪽 리스트에서 상품을 선택하세요
-      </div>
+    <div class="ch-area">
+      <canvas id="cv"></canvas>
+      <div class="ch-empty" id="chE"><span class="ic">📈</span>왼쪽에서 상품을 선택하세요</div>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════
-//  CONFIG — GitHub 사용자명을 변경하세요
-// ══════════════════════════════════════
-const GITHUB_USER = "timikim-a11y";
-const GITHUB_REPO = "oliveyoung-ranking";
-// ══════════════════════════════════════
+// ══════════ CONFIG ══════════
+const GH_USER = "timikim-a11y";
+const GH_REPO = "oliveyoung-ranking";
+// ════════════════════════════
 
-const DATA_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/data`;
-const API_BASE  = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data`;
+const RAW = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data`;
+const API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data`;
 
-const CATEGORIES = [
-  "전체","스킨케어","메이크업","바디케어","헤어케어","향수/디퓨저","메이크업 툴",
-  "맨즈케어","더모코스메틱","마스크팩","클렌징","선케어","네일","건강식품",
-  "푸드","구강용품","위생용품","헬스/건강용품","홈리빙/가전","취미/팬시","패션"
+const CATS = [
+  "전체","스킨케어","마스크팩","클렌징","선케어","메이크업","네일","뷰티소품",
+  "더모코스메틱","맨즈에딧","향수/디퓨저","헤어케어","바디케어",
+  "건강식품","푸드","구강용품","헬스/건강용품","위생용품","패션","홈리빙/가전","취미/팬시"
 ];
+const CMP_C = ["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
 
-const COMPARE_COLORS = ["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
+// ── KST helpers ──
+// updated_at은 이미 KST ISO string (예: "2026-04-23T15:11:00+09:00")
+// 또는 UTC ISO string → 항상 Date로 파싱 후 KST 포맷
+function kst(s) {
+  const d = new Date(s);
+  // JS Date는 로컬타임으로 변환하므로, 강제로 KST offset 적용
+  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+  return new Date(utc + 9 * 3600000);
+}
+function fmtFull(s) { const d=kst(s); return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())} KST`; }
+function fmtShort(s) { const d=kst(s); return `${d.getMonth()+1}/${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())}`; }
+function kstDate(s) { const d=kst(s); return `${d.getFullYear()}-${S(d.getMonth()+1)}-${S(d.getDate())}`; }
+function kstMonth(s) { const d=kst(s); return `${d.getFullYear()}-${S(d.getMonth()+1)}`; }
+function S(n) { return String(n).padStart(2,"0"); }
 
-let allFiles = [];        // [{name, download_url}, ...]
-let allData = [];         // loaded snapshots
-let filteredData = [];    // month-filtered
-let currentCategory = "전체";
-let currentMonth = "all";
-let selectedProduct = null;
-let compareMode = false;
-let compareList = [];
-let chart = null;
+// ── State ──
+let allFiles=[], allData=[], fData=[];
+let curCat="전체", curPeriod="all", selProd=null, cmpMode=false, cmpList=[], chart=null;
 
 // ── Init ──
-document.addEventListener("DOMContentLoaded", async () => {
-  renderCategories();
-  document.getElementById("searchInput").addEventListener("keyup", e => {
-    if (e.key === "Enter") applySearch();
-  });
-  await loadFileList();
+document.addEventListener("DOMContentLoaded", async()=>{
+  renderCats();
+  document.getElementById("q").addEventListener("keyup",e=>{if(e.key==="Enter")renderList()});
+  const t=new Date(), ts=t.toISOString().split("T")[0];
+  const m=new Date(t); m.setMonth(m.getMonth()-1);
+  document.getElementById("dTo").value=ts;
+  document.getElementById("dFrom").value=m.toISOString().split("T")[0];
+  await load();
 });
 
-// ── Load file list from GitHub API ──
-async function loadFileList() {
+async function load() {
   try {
-    const res = await fetch(API_BASE);
-    if (!res.ok) throw new Error("API error");
-    const files = await res.json();
-    allFiles = files
-      .filter(f => f.name.endsWith(".json") && f.name !== "latest.json" && f.name !== ".gitkeep")
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const r=await fetch(API); if(!r.ok) throw 0;
+    const files=await r.json();
+    allFiles=files.filter(f=>f.name.endsWith(".json")&&f.name!=="latest.json"&&f.name!==".gitkeep").sort((a,b)=>a.name.localeCompare(b.name));
+    if(!allFiles.length) throw 0;
 
-    if (allFiles.length === 0) throw new Error("No files");
-
-    renderMonthFilter();
-    await loadDataForMonth("all");
-    document.getElementById("noDataBanner").style.display = "none";
-  } catch (e) {
-    console.error(e);
-    // Try latest.json fallback
+    // 병렬 로드 (최근 100개, 5개씩 배치)
+    const toLoad=allFiles.slice(-100);
+    allData=[];
+    for(let i=0;i<toLoad.length;i+=5){
+      const batch=toLoad.slice(i,i+5);
+      const res=await Promise.allSettled(batch.map(f=>fetch(f.download_url).then(r=>r.json())));
+      res.forEach(r=>{if(r.status==="fulfilled")allData.push(r.value)});
+    }
+    renderPeriod(); applyFilter();
+    document.getElementById("ndb").style.display="none";
+  } catch(e) {
     try {
-      const res = await fetch(`${DATA_BASE}/latest.json`);
-      if (res.ok) {
-        const data = await res.json();
-        allData = [data];
-        filteredData = [data];
-        renderMonthFilter();
-        showUpdateTime(data);
-        renderRankings();
-        document.getElementById("noDataBanner").style.display = "none";
-      } else {
-        throw new Error("No latest");
-      }
+      const r=await fetch(`${RAW}/latest.json`);
+      if(!r.ok) throw 0;
+      const d=await r.json();
+      allData=[d]; fData=[d]; renderPeriod(); showTime(d); renderList();
+      document.getElementById("ndb").style.display="none";
     } catch {
-      document.getElementById("noDataBanner").style.display = "flex";
-      document.getElementById("rankList").innerHTML =
-        '<div class="loading" style="color:var(--text-muted)">아직 수집된 데이터가 없습니다</div>';
+      document.getElementById("ndb").style.display="flex";
+      document.getElementById("rl").innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';
     }
   }
 }
 
-// ── Month filter ──
-function renderMonthFilter() {
-  const months = new Set();
-  allFiles.forEach(f => {
-    const m = f.name.substring(0, 7); // "2025-04"
-    months.add(m);
+// ── Period ──
+function renderPeriod() {
+  const months=new Set();
+  allData.forEach(d=>{if(d.updated_at)months.add(kstMonth(d.updated_at))});
+  const sorted=[...months].sort().reverse();
+  const c=document.getElementById("pfBtns");
+  let h='';
+  [["all","전체"],["today","오늘"],["7d","7일"],["30d","30일"]].forEach(([k,l])=>{
+    h+=`<button class="pf-btn ${curPeriod===k?'on':''}" onclick="setPeriod('${k}')">${l}</button>`;
   });
-  const sorted = [...months].sort().reverse();
-  const scroll = document.getElementById("monthScroll");
-
-  let html = `<button class="month-btn ${currentMonth==='all'?'active':''}" onclick="selectMonth('all')">전체 기간</button>`;
-  sorted.forEach(m => {
-    const [y, mo] = m.split("-");
-    const label = `${y}년 ${parseInt(mo)}월`;
-    html += `<button class="month-btn ${currentMonth===m?'active':''}" onclick="selectMonth('${m}')">${label}</button>`;
+  sorted.forEach(m=>{
+    const[y,mo]=m.split("-");
+    h+=`<button class="pf-btn ${curPeriod===m?'on':''}" onclick="setPeriod('${m}')">${y}년 ${+mo}월</button>`;
   });
-  scroll.innerHTML = html;
+  c.innerHTML=h;
 }
 
-async function selectMonth(month) {
-  currentMonth = month;
-  renderMonthFilter();
-  await loadDataForMonth(month);
-}
+function setPeriod(p){curPeriod=p;renderPeriod();applyFilter();}
 
-async function loadDataForMonth(month) {
-  let filesToLoad;
-  if (month === "all") {
-    // 최근 50개만
-    filesToLoad = allFiles.slice(-50);
+function applyFilter(){
+  const now=kst(new Date().toISOString());
+  if(curPeriod==="all") fData=[...allData];
+  else if(curPeriod==="today"){
+    const td=`${now.getFullYear()}-${S(now.getMonth()+1)}-${S(now.getDate())}`;
+    fData=allData.filter(d=>kstDate(d.updated_at)===td);
+  } else if(curPeriod==="7d"){
+    const cut=new Date(now.getTime()-7*864e5);
+    fData=allData.filter(d=>kst(d.updated_at)>=cut);
+  } else if(curPeriod==="30d"){
+    const cut=new Date(now.getTime()-30*864e5);
+    fData=allData.filter(d=>kst(d.updated_at)>=cut);
   } else {
-    filesToLoad = allFiles.filter(f => f.name.startsWith(month));
+    fData=allData.filter(d=>kstMonth(d.updated_at)===curPeriod);
   }
-
-  // Load up to 50 files
-  filesToLoad = filesToLoad.slice(-50);
-
-  const loaded = [];
-  for (const file of filesToLoad) {
-    try {
-      const res = await fetch(file.download_url);
-      if (res.ok) loaded.push(await res.json());
-    } catch {}
-  }
-
-  if (loaded.length === 0 && allData.length > 0) {
-    filteredData = allData;
-  } else {
-    allData = loaded.length > 0 ? loaded : allData;
-    filteredData = loaded;
-  }
-
-  if (filteredData.length > 0) {
-    showUpdateTime(filteredData[filteredData.length - 1]);
-  }
-  renderRankings();
-  updateChart();
+  if(!fData.length&&allData.length) fData=allData.slice(-1);
+  if(fData.length) showTime(fData[fData.length-1]);
+  renderList(); updateChart();
 }
 
-function showUpdateTime(data) {
-  const t = new Date(data.updated_at);
-  document.getElementById("lastUpdate").textContent =
-    `마지막 업데이트: ${t.getFullYear()}.${t.getMonth()+1}.${t.getDate()} ${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
+function applyRange(){
+  const f=document.getElementById("dFrom").value, t=document.getElementById("dTo").value;
+  if(!f||!t)return;
+  curPeriod="custom"; renderPeriod();
+  const fd=new Date(f+"T00:00:00"), td=new Date(t+"T23:59:59");
+  fData=allData.filter(d=>{const k=kst(d.updated_at);return k>=fd&&k<=td});
+  if(!fData.length&&allData.length)fData=allData.slice(-1);
+  if(fData.length)showTime(fData[fData.length-1]);
+  renderList(); updateChart();
 }
+
+function showTime(d){document.getElementById("lastUpdate").textContent=`마지막 업데이트: ${fmtFull(d.updated_at)}`;}
 
 // ── Categories ──
-function renderCategories() {
-  document.getElementById("catGrid").innerHTML = CATEGORIES.map(cat =>
-    `<button class="cat-btn ${cat===currentCategory?'active':''}" onclick="switchCategory('${cat}')">${cat}</button>`
+function renderCats(){
+  document.getElementById("catGrid").innerHTML=CATS.map(c=>
+    `<button class="cat-btn ${c===curCat?'on':''}" onclick="setCat('${c}')">${c}</button>`
   ).join("");
 }
-
-function switchCategory(cat) {
-  currentCategory = cat;
-  selectedProduct = null;
-  compareList = [];
-  renderCategories();
-  renderRankings();
-  updateChart();
-  document.getElementById("chartCategory").textContent = `[${cat}]`;
-  document.getElementById("chartTag").textContent = cat;
+function setCat(c){
+  curCat=c; selProd=null; cmpList=[];
+  renderCats(); renderList(); updateChart();
+  document.getElementById("chCat").textContent=`[${c}]`;
+  document.getElementById("chTag").textContent=c;
 }
 
 // ── Ranking list ──
-function renderRankings() {
-  const list = document.getElementById("rankList");
-  if (filteredData.length === 0) {
-    list.innerHTML = '<div class="loading" style="color:var(--text-muted)">데이터 없음</div>';
-    return;
-  }
+function renderList(){
+  const el=document.getElementById("rl");
+  if(!fData.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';return}
 
-  const latest = filteredData[filteredData.length - 1];
-  let products = latest.products || [];
+  const latest=fData[fData.length-1];
+  let prods=latest.products||[];
 
-  if (currentCategory !== "전체") {
-    products = products.filter(p => p.category === currentCategory);
-  }
+  // ★ 핵심: 카테고리 필터 — 해당 카테고리로 크롤링된 데이터만 표시
+  if(curCat!=="전체") prods=prods.filter(p=>p.category===curCat);
 
-  const query = document.getElementById("searchInput").value.trim().toLowerCase();
-  if (query) {
-    products = products.filter(p =>
-      (p.brand||"").toLowerCase().includes(query) ||
-      (p.name||"").toLowerCase().includes(query)
-    );
-  }
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  if(q) prods=prods.filter(p=>(p.brand||"").toLowerCase().includes(q)||(p.name||"").toLowerCase().includes(q));
+  prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
 
-  products.sort((a, b) => (a.rank||999) - (b.rank||999));
+  document.getElementById("pTitle").textContent=`${curCat} 랭킹`;
+  document.getElementById("pCnt").textContent=`(${prods.length})`;
 
-  document.getElementById("panelTitle").textContent = `${currentCategory} 랭킹`;
-  document.getElementById("panelCount").textContent = `(${products.length})`;
+  if(!prods.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터가 없습니다</div>';return}
 
-  if (products.length === 0) {
-    list.innerHTML = '<div class="loading" style="color:var(--text-muted)">해당 카테고리 데이터가 없습니다</div>';
-    return;
-  }
+  el.innerHTML=prods.map((p,i)=>{
+    const isOn=!cmpMode&&selProd&&selProd.brand===p.brand&&selProd.name===p.name&&selProd.category===p.category;
+    const isCmp=cmpMode&&cmpList.find(c=>c.brand===p.brand&&c.name===p.name&&c.category===p.category);
+    const ci=cmpList.findIndex(c=>c.brand===p.brand&&c.name===p.name&&c.category===p.category);
 
-  list.innerHTML = products.map((p, idx) => {
-    const isActive = !compareMode && selectedProduct &&
-      selectedProduct.brand === p.brand && selectedProduct.name === p.name;
-    const isCompared = compareMode && compareList.find(c => c.brand === p.brand && c.name === p.name);
-    const compIdx = compareList.findIndex(c => c.brand === p.brand && c.name === p.name);
-
-    let changeHtml = '';
-    if (filteredData.length >= 2) {
-      const prev = filteredData[filteredData.length - 2];
-      const prevItem = (prev.products||[]).find(pp => pp.brand === p.brand && pp.name === p.name && pp.category === p.category);
-      if (prevItem) {
-        const diff = (prevItem.rank||999) - (p.rank||999);
-        if (diff > 0) changeHtml = `<div class="rank-change up">▲${diff}</div>`;
-        else if (diff < 0) changeHtml = `<div class="rank-change down">▼${Math.abs(diff)}</div>`;
-        else changeHtml = `<div class="rank-change same">-</div>`;
-      } else {
-        changeHtml = `<div class="rank-change new">NEW</div>`;
-      }
+    let ch='';
+    if(fData.length>=2){
+      const prev=fData[fData.length-2];
+      const pi=(prev.products||[]).find(pp=>pp.brand===p.brand&&pp.name===p.name&&pp.category===p.category);
+      if(pi){const d=(pi.rank||999)-(p.rank||999);
+        ch=d>0?`<div class="rc up">▲${d}</div>`:d<0?`<div class="rc dn">▼${Math.abs(d)}</div>`:`<div class="rc sm">-</div>`;
+      }else ch=`<div class="rc nw">NEW</div>`;
     }
-
-    const hue = ((p.brand||"").charCodeAt(0) * 37) % 360;
-
-    return `
-      <div class="rank-item ${isActive?'active':''} ${isCompared?'active':''}"
-           onclick="selectProduct(${idx})" data-idx="${idx}">
-        <div class="rank-num">${p.rank||idx+1}</div>
-        ${changeHtml}
-        <div class="rank-name">
-          ${isCompared ? `<span style="color:${COMPARE_COLORS[compIdx]};margin-right:3px;font-size:9px">●</span>` : ''}
-          ${truncate(p.name, 28)}
-        </div>
-        <div class="rank-brand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%)">
-          ${p.brand||''}
-        </div>
-      </div>`;
+    const hue=((p.brand||"").charCodeAt(0)*37)%360;
+    return `<div class="ri ${isOn||isCmp?'on':''}" onclick="sel(${i})">
+      <div class="rn">${p.rank||i+1}</div>${ch}
+      <div class="rname">${isCmp?`<span style="color:${CMP_C[ci]};font-size:9px">● </span>`:''}${trunc(p.name,28)}</div>
+      <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%)">${p.brand||''}</div>
+    </div>`;
   }).join("");
-
-  list._products = products;
+  el._p=prods;
 }
 
-function truncate(s, n) { return !s ? '' : s.length > n ? s.slice(0,n)+'...' : s; }
+function trunc(s,n){return !s?'':s.length>n?s.slice(0,n)+'...':s}
 
-function selectProduct(idx) {
-  const list = document.getElementById("rankList");
-  const products = list._products;
-  if (!products || !products[idx]) return;
-  const product = products[idx];
-
-  if (compareMode) {
-    const exists = compareList.findIndex(c => c.brand === product.brand && c.name === product.name);
-    if (exists >= 0) compareList.splice(exists, 1);
-    else if (compareList.length < 5) compareList.push(product);
-    renderRankings();
-    updateChart();
-    return;
+function sel(i){
+  const p=document.getElementById("rl")._p;if(!p||!p[i])return;
+  const prod=p[i];
+  if(cmpMode){
+    const x=cmpList.findIndex(c=>c.brand===prod.brand&&c.name===prod.name&&c.category===prod.category);
+    if(x>=0)cmpList.splice(x,1);else if(cmpList.length<5)cmpList.push(prod);
+    renderList();updateChart();return;
   }
-
-  selectedProduct = product;
-  renderRankings();
-  updateChart();
+  selProd=prod;renderList();updateChart();
 }
 
 // ── Chart ──
-function updateChart() {
-  const emptyEl = document.getElementById("chartEmpty");
-  const canvas = document.getElementById("rankChart");
-  const subtitleEl = document.getElementById("chartSubtitle");
+function updateChart(){
+  const ee=document.getElementById("chE"),cv=document.getElementById("cv"),sub=document.getElementById("chSub");
 
-  if (compareMode && compareList.length === 0) {
-    showEmpty("📊", "왼쪽 리스트에서 비교할 상품을 클릭하세요 (최대 5개)");
-    subtitleEl.textContent = "비교할 상품을 선택하세요";
-    return;
-  }
-  if (!compareMode && !selectedProduct) {
-    showEmpty("📈", "왼쪽 리스트에서 상품을 선택하세요");
-    subtitleEl.textContent = "왼쪽 리스트에서 상품을 선택하세요";
-    return;
-  }
+  if(cmpMode&&!cmpList.length){empty("📊","비교할 상품을 선택하세요 (최대 5개)");sub.textContent="상품을 선택하세요";return}
+  if(!cmpMode&&!selProd){empty("📈","왼쪽에서 상품을 선택하세요");sub.textContent="상품을 선택하세요";return}
 
-  emptyEl.style.display = "none";
-  canvas.style.display = "block";
+  ee.style.display="none";cv.style.display="block";
 
-  const labels = filteredData.map(d => {
-    const t = new Date(d.updated_at);
-    return `${t.getMonth()+1}/${t.getDate()} ${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
-  });
+  const labels=fData.map(d=>fmtShort(d.updated_at));
+  let ds=[];
 
-  let datasets = [];
-
-  if (compareMode) {
-    compareList.forEach((p, i) => {
-      const data = filteredData.map(snap => {
-        const found = (snap.products||[]).find(sp => sp.brand===p.brand && sp.name===p.name && sp.category===p.category);
-        return found ? (found.rank||null) : null;
+  if(cmpMode){
+    cmpList.forEach((p,i)=>{
+      const data=fData.map(snap=>{
+        const f=(snap.products||[]).find(sp=>sp.brand===p.brand&&sp.name===p.name&&sp.category===p.category);
+        return f?(f.rank||null):null;
       });
-      datasets.push({
-        label: p.brand,
-        data,
-        borderColor: COMPARE_COLORS[i],
-        backgroundColor: COMPARE_COLORS[i] + "15",
-        borderWidth: 2.5,
-        pointRadius: 3,
-        pointBackgroundColor: COMPARE_COLORS[i],
-        tension: 0.3,
-        spanGaps: true,
-      });
+      ds.push({label:p.brand,data,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"15",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:true});
     });
-    subtitleEl.textContent = compareList.map(p => `${p.brand}(${p.rank}위)`).join(' · ');
+    sub.textContent=cmpList.map(p=>`${p.brand}(${p.rank}위)`).join(' · ');
   } else {
-    const data = filteredData.map(snap => {
-      const found = (snap.products||[]).find(sp => sp.brand===selectedProduct.brand && sp.name===selectedProduct.name && sp.category===selectedProduct.category);
-      return found ? (found.rank||null) : null;
+    const data=fData.map(snap=>{
+      const f=(snap.products||[]).find(sp=>sp.brand===selProd.brand&&sp.name===selProd.name&&sp.category===selProd.category);
+      return f?(f.rank||null):null;
     });
-    datasets.push({
-      label: selectedProduct.brand,
-      data,
-      borderColor: "#151515",
-      backgroundColor: "rgba(245,255,80,0.15)",
-      borderWidth: 2.5,
-      pointRadius: 3,
-      pointBackgroundColor: "#151515",
-      tension: 0.3,
-      fill: true,
-      spanGaps: true,
-    });
-    subtitleEl.textContent = `${selectedProduct.name} · ${selectedProduct.brand} · ${selectedProduct.rank}위`;
+    ds.push({label:selProd.brand,data,borderColor:"#151515",backgroundColor:"rgba(245,255,80,.15)",borderWidth:2.5,pointRadius:3,pointBackgroundColor:"#151515",tension:.3,fill:true,spanGaps:true});
+    sub.textContent=`${selProd.name} · ${selProd.brand} · ${selProd.rank}위`;
   }
 
-  if (chart) chart.destroy();
-
-  chart = new Chart(canvas, {
-    type: "line",
-    data: { labels, datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: "index", intersect: false },
-      plugins: {
-        legend: { display: compareMode, position: "top", labels: { font: { size: 11, family: "'Noto Sans KR'" } } },
-        tooltip: {
-          backgroundColor: "#fff",
-          titleColor: "#151515",
-          bodyColor: "#666",
-          borderColor: "#e5e7eb",
-          borderWidth: 1,
-          padding: 12,
-          titleFont: { family: "'Noto Sans KR'", weight: "600" },
-          bodyFont: { family: "'Noto Sans KR'" },
-          callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}위` }
-        }
-      },
-      scales: {
-        y: {
-          reverse: true,
-          min: 1,
-          suggestedMax: 30,
-          ticks: {
-            callback: v => v + "위",
-            font: { size: 11 }, color: "rgba(21,21,21,0.3)",
-          },
-          grid: { color: "rgba(21,21,21,0.04)" },
-        },
-        x: {
-          ticks: {
-            font: { size: 10 }, color: "rgba(21,21,21,0.3)",
-            maxRotation: 45, autoSkip: true, maxTicksLimit: 10,
-          },
-          grid: { display: false },
-        }
-      }
+  if(chart)chart.destroy();
+  chart=new Chart(cv,{type:"line",data:{labels,datasets:ds},options:{
+    responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+    plugins:{
+      legend:{display:cmpMode,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"}}},
+      tooltip:{backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:10,
+        titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
+        callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}위`}}
+    },
+    scales:{
+      y:{reverse:true,min:1,suggestedMax:30,ticks:{callback:v=>v+"위",font:{size:11},color:"rgba(21,21,21,.3)"},grid:{color:"rgba(21,21,21,.04)"}},
+      x:{ticks:{font:{size:10},color:"rgba(21,21,21,.3)",maxRotation:45,autoSkip:true,maxTicksLimit:10},grid:{display:false}}
     }
-  });
+  }});
 }
 
-function showEmpty(icon, text) {
-  const el = document.getElementById("chartEmpty");
-  const canvas = document.getElementById("rankChart");
-  el.style.display = "flex";
-  el.innerHTML = `<span class="icon">${icon}</span>${text}`;
-  canvas.style.display = "none";
-  if (chart) { chart.destroy(); chart = null; }
+function empty(ic,txt){
+  const e=document.getElementById("chE"),c=document.getElementById("cv");
+  e.style.display="flex";e.innerHTML=`<span class="ic">${ic}</span>${txt}`;
+  c.style.display="none";if(chart){chart.destroy();chart=null}
 }
-
-function toggleCompare() {
-  compareMode = !compareMode;
-  compareList = [];
-  document.getElementById("compareToggle").classList.toggle("on", compareMode);
-  renderRankings();
-  updateChart();
+function toggleCmp(){
+  cmpMode=!cmpMode;cmpList=[];
+  document.getElementById("cmpTog").classList.toggle("on",cmpMode);
+  renderList();updateChart();
 }
-
-function applySearch() { renderRankings(); }
 </script>
 </body>
 </html>
