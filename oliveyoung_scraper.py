@@ -6,8 +6,11 @@ GitHub Actions에서 자동 실행됩니다.
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from playwright.sync_api import sync_playwright
+
+# 한국 시간대 (UTC+9)
+KST = timezone(timedelta(hours=9))
 
 
 # 올리브영 실제 카테고리 URL (2025년 4월 확인)
@@ -178,7 +181,7 @@ def scrape_oliveyoung():
 def save_results(data):
     """data/ 폴더에 날짜별로 저장"""
     os.makedirs("data", exist_ok=True)
-    now = datetime.now()
+    now = datetime.now(KST)
     filename = now.strftime("%Y-%m-%d_%H%M") + ".json"
     filepath = os.path.join("data", filename)
 
@@ -211,7 +214,7 @@ def save_results(data):
 if __name__ == "__main__":
     print("=" * 50)
     print("🫒 올리브영 랭킹 크롤러")
-    print(f"⏰ 실행 시간: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"⏰ 실행 시간: {datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S')} (KST)")
     print("=" * 50)
 
     data = scrape_oliveyoung()
