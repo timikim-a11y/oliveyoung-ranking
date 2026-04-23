@@ -1,0 +1,50 @@
+name: 올리브영 랭킹 크롤링
+
+# ─── 실행 시점 ───
+on:
+  schedule:
+    # 매 시 11분에 실행 (예: 00:11, 01:11, 02:11 ... 23:11 UTC)
+    - cron: '11 * * * *'
+
+  # 수동 실행 버튼도 활성화
+  workflow_dispatch:
+
+# ─── 권한 설정 ───
+permissions:
+  contents: write
+
+# ─── 실행 작업 ───
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 코드 가져오기
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      # 2. Python 설치
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Playwright 설치
+      - name: Playwright 설치
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps
+
+      # 4. 크롤링 실행
+      - name: 크롤링 실행
+        run: python oliveyoung_scraper.py
+
+      # 5. 결과를 GitHub에 저장 (자동 커밋)
+      - name: 데이터 저장 (자동 커밋)
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "📊 랭킹 데이터 업데이트 $(date +'%Y-%m-%d %H:%M')"
+          git push
