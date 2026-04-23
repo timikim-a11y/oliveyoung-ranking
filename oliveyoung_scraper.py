@@ -10,131 +10,42 @@ from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 
-def scrape_oliveyoung():
-    """올리브영 베스트 랭킹을 Playwright로 크롤링 (탭 클릭 방식)"""
+# 올리브영 실제 카테고리 URL (2025년 4월 확인)
+# 핵심: dispCatNo=900000100100001 (고정) + fltDispCatNo=카테고리번호
+BASE = "https://www.oliveyoung.co.kr/store/main/getBestList.do"
+PARAMS = "dispCatNo=900000100100001&pageIdx=1&rowsPerPage=100"
 
-    results = []
+CATEGORIES = [
+    ("전체",          ""),
+    ("스킨케어",      "10000010001"),
+    ("마스크팩",      "10000010009"),
+    ("클렌징",        "10000010010"),
+    ("선케어",        "10000010011"),
+    ("메이크업",      "10000010002"),
+    ("네일",          "10000010012"),
+    ("뷰티소품",      "10000010006"),
+    ("더모코스메틱",   "10000010008"),
+    ("맨즈에딧",      "10000010007"),
+    ("향수/디퓨저",   "10000010005"),
+    ("헤어케어",      "10000010004"),
+    ("바디케어",      "10000010003"),
+    ("건강식품",      "10000020001"),
+    ("푸드",          "10000020002"),
+    ("구강용품",      "10000020003"),
+    ("헬스/건강용품",  "10000020005"),
+    ("위생용품",      "10000020004"),
+    ("패션",          "10000030007"),
+    ("홈리빙/가전",   "10000030005"),
+    ("취미/팬시",     "10000030006"),
+]
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context(
-            user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/125.0.0.0 Safari/537.36"
-            ),
-            locale="ko-KR",
-            viewport={"width": 1920, "height": 1080},
-        )
-        page = context.new_page()
 
-        # 1) 베스트 페이지 접속
-        print("\n🌐 올리브영 베스트 페이지 접속 중...")
-        page.goto(
-            "https://www.oliveyoung.co.kr/store/main/getBestList.do",
-            wait_until="networkidle",
-            timeout=60000,
-        )
-        page.wait_for_timeout(5000)
-
-        # 2) 카테고리 탭 목록 수집
-        #    올리브영은 상단에 카테고리 탭이 있고 클릭하면 목록이 바뀜
-        cat_tabs = page.query_selector_all(
-            "ul.cate_list li a, "              # 카테고리 탭 셀렉터 후보 1
-            "div.best_tab_area a, "            # 후보 2
-            ".tab_list li a, "                 # 후보 3
-            "nav.category a, "                 # 후보 4
-            "[class*='cate'] li a, "           # 후보 5
-            "[class*='tab'] li a"              # 후보 6
-        )
-
-        # 중복 제거
-        seen = set()
-        unique_tabs = []
-        for tab in cat_tabs:
-            try:
-                text = tab.inner_text().strip()
-                if text and text not in seen and len(text) < 20:
-                    seen.add(text)
-                    unique_tabs.append(tab)
-            except:
-                pass
-
-        if unique_tabs:
-            print(f"📂 카테고리 탭 {len(unique_tabs)}개 발견: {list(seen)}")
-        else:
-            print("⚠️ 카테고리 탭을 찾지 못함 — 전체 랭킹만 수집합니다")
-
-        # 3) 먼저 현재 페이지(전체)에서 수집
-        all_products = extract_products(page, "전체")
-        results.extend(all_products)
-        print(f"✅ [전체] {len(all_products)}개 상품 수집")
-
-        # 4) 각 카테고리 탭 클릭하여 수집
-        for tab in unique_tabs:
-            try:
-                cat_name = tab.inner_text().strip()
-                if cat_name in ("전체", ""):
-                    continue
-
-                # 탭 클릭
-                tab.click()
-                page.wait_for_timeout(3000)
-                # 네트워크 안정화 대기
-                try:
-                    page.wait_for_load_state("networkidle", timeout=10000)
-                except:
-                    pass
-
-                # 상품 수집
-                products = extract_products(page, cat_name)
-                results.extend(products)
-                print(f"✅ [{cat_name}] {len(products)}개 상품 수집")
-
-            except Exception as e:
-                print(f"❌ [{cat_name}] 실패: {e}")
-
-        # 5) 탭 클릭이 안 된 경우, URL 파라미터 방식도 시도
-        if len(results) <= len(all_products):
-            print("\n🔄 탭 클릭 방식 실패 — URL 파라미터 방식 시도...")
-            results = list(all_products)  # 전체는 유지
-
-            # 페이지 소스에서 카테고리 번호 추출 시도
-            page_content = page.content()
-            import re
-            cat_numbers = re.findall(r"dispCatNo['\"]?\s*[:=]\s*['\"]?(\d+)", page_content)
-            cat_numbers = list(dict.fromkeys(cat_numbers))  # 중복 제거, 순서 유지
-
-            if cat_numbers:
-                print(f"📂 페이지에서 카테고리 번호 {len(cat_numbers)}개 발견")
-                for cat_no in cat_numbers[:20]:
-                    try:
-                        url = f"https://www.oliveyoung.co.kr/store/main/getBestList.do?dispCatNo={cat_no}"
-                        page.goto(url, wait_until="networkidle", timeout=30000)
-                        page.wait_for_timeout(3000)
-
-                        # 카테고리명 추출
-                        active_tab = page.query_selector(
-                            "ul.cate_list li.on a, "
-                            "[class*='cate'] li.active a, "
-                            "[class*='tab'] li.on a, "
-                            ".active [class*='cate']"
-                        )
-                        cat_name = active_tab.inner_text().strip() if active_tab else f"카테고리_{cat_no}"
-
-                        products = extract_products(page, cat_name)
-                        if products:
-                            results.extend(products)
-                            print(f"✅ [{cat_name}] {len(products)}개 상품 수집 (번호: {cat_no})")
-                        else:
-                            print(f"⚠️ [{cat_name}] 0개 (번호: {cat_no})")
-
-                    except Exception as e:
-                        print(f"❌ [카테고리_{cat_no}] 실패: {e}")
-
-        browser.close()
-
-    return results
+def build_url(flt_cat_no):
+    """카테고리별 URL 생성"""
+    url = f"{BASE}?{PARAMS}"
+    if flt_cat_no:
+        url += f"&fltDispCatNo={flt_cat_no}"
+    return url
 
 
 def extract_products(page, category):
@@ -142,19 +53,10 @@ def extract_products(page, category):
     products = []
 
     # 여러 셀렉터 시도
-    list_selectors = [
-        "ul.cate_prd_list li",
-        "ul.best_list li",
-        ".prd_list li",
-        "[class*='prd_list'] li",
-        "[class*='best'] li",
-        ".product_list li",
-    ]
-
     items = []
-    for sel in list_selectors:
+    for sel in ["ul.cate_prd_list li", "ul.best_list li", ".prd_list li", "[class*='prd_list'] li"]:
         items = page.query_selector_all(sel)
-        if len(items) > 0:
+        if items:
             break
 
     if not items:
@@ -177,45 +79,45 @@ def extract_products(page, category):
         for sel in [".tx_brand", ".brand", "[class*='brand']"]:
             el = item.query_selector(sel)
             if el:
-                text = el.inner_text().strip()
-                if text:
-                    product["brand"] = text
+                t = el.inner_text().strip()
+                if t:
+                    product["brand"] = t
                     break
 
         # 상품명
         for sel in [".tx_name", ".prd_name", "[class*='name']"]:
             el = item.query_selector(sel)
             if el:
-                text = el.inner_text().strip()
-                if text:
-                    product["name"] = text
+                t = el.inner_text().strip()
+                if t:
+                    product["name"] = t
                     break
 
         # 가격
         for sel in [".tx_cur .tx_num", ".prd_price", "[class*='price'] [class*='num']"]:
             el = item.query_selector(sel)
             if el:
-                text = el.inner_text().strip()
-                if text:
-                    product["price"] = text
+                t = el.inner_text().strip()
+                if t:
+                    product["price"] = t
                     break
 
         # 원가
         for sel in [".tx_org .tx_num", "[class*='org'] [class*='num']"]:
             el = item.query_selector(sel)
             if el:
-                text = el.inner_text().strip()
-                if text:
-                    product["original_price"] = text
+                t = el.inner_text().strip()
+                if t:
+                    product["original_price"] = t
                     break
 
         # 할인율
-        for sel in [".tx_sale_per", "[class*='sale']", "[class*='discount']"]:
+        for sel in [".tx_sale_per", "[class*='sale_per']", "[class*='discount']"]:
             el = item.query_selector(sel)
             if el:
-                text = el.inner_text().strip()
-                if text:
-                    product["discount"] = text
+                t = el.inner_text().strip()
+                if t:
+                    product["discount"] = t
                     break
 
         # 이미지
@@ -231,11 +133,46 @@ def extract_products(page, category):
                 href = "https://www.oliveyoung.co.kr" + href
             product["url"] = href
 
-        # 이름이 있는 항목만 추가
         if product["name"]:
             products.append(product)
 
     return products
+
+
+def scrape_oliveyoung():
+    """올리브영 베스트 랭킹을 Playwright로 크롤링"""
+
+    results = []
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/125.0.0.0 Safari/537.36"
+            ),
+            locale="ko-KR",
+            viewport={"width": 1920, "height": 1080},
+        )
+        page = context.new_page()
+
+        for cat_name, flt_cat_no in CATEGORIES:
+            try:
+                url = build_url(flt_cat_no)
+                page.goto(url, wait_until="networkidle", timeout=45000)
+                page.wait_for_timeout(4000)
+
+                products = extract_products(page, cat_name)
+                results.extend(products)
+                print(f"✅ [{cat_name}] {len(products)}개 상품 수집")
+
+            except Exception as e:
+                print(f"❌ [{cat_name}] 실패: {e}")
+
+        browser.close()
+
+    return results
 
 
 def save_results(data):
@@ -262,7 +199,6 @@ def save_results(data):
     print(f"\n📁 저장: {filepath} ({len(data)}개 상품)")
     print(f"📁 최신: {latest_path}")
 
-    # 카테고리별 통계
     cat_stats = {}
     for p in data:
         cat = p.get("category", "기타")
