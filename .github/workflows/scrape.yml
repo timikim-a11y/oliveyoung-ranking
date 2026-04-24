@@ -2,8 +2,9 @@ name: 올리브영 랭킹 크롤링
 
 on:
   schedule:
-    # 매 시 11분에 실행 (UTC 기준이지만 파일 저장은 KST)
-    - cron: '11 * * * *'
+    # 매 2시간마다 11분에 실행 (UTC 기준이지만 파일 저장은 KST)
+    # 00:11, 02:11, 04:11, 06:11 ... 22:11 UTC
+    - cron: '11 */2 * * *'
   workflow_dispatch:
 
 permissions:
