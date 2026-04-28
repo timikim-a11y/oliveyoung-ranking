@@ -300,18 +300,8 @@ function updateChart(){
     const ds=[];
     cmpList.forEach((p,i)=>{
       const rankData=fData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
-      // ghost 보간 데이터
-      const ghostData=[...rankData];
-      for(let j=0;j<ghostData.length;j++){
-        if(ghostData[j]===null){
-          let pv=null,pi=-1,nv=null,ni=-1;
-          for(let k=j-1;k>=0;k--){if(rankData[k]!==null){pv=rankData[k];pi=k;break;}}
-          for(let k=j+1;k<rankData.length;k++){if(rankData[k]!==null){nv=rankData[k];ni=k;break;}}
-          if(pv!==null&&nv!==null)ghostData[j]=Math.round(pv+(nv-pv)*((j-pi)/(ni-pi)));
-          else if(pv!==null)ghostData[j]=pv;
-          else if(nv!==null)ghostData[j]=nv;
-        }
-      }
+      // ghost: 순위권 밖은 105위로 채워서 아래에서 올라오는 형태
+      const ghostData=rankData.map(v=>v!==null?v:105);
       // 점선 (순위권 밖 연결)
       ds.push({label:'_ghost_'+i,data:ghostData,borderColor:CMP_C[i]+'55',borderDash:[4,3],borderWidth:1.5,pointRadius:0,tension:.3,fill:false,spanGaps:true,order:10+i});
       // 실선 (실제 순위)
@@ -331,27 +321,12 @@ function updateChart(){
     const rankData=rawData.map(d=>d.inRank?d.rank:null);
 
     // 순위권 밖 구간을 점선으로 잇기 위한 보조 데이터셋
-    // null 구간의 앞뒤 값을 선형 보간하여 채움
-    const ghostData=[...rankData];
-    for(let i=0;i<ghostData.length;i++){
-      if(ghostData[i]===null){
-        // 앞쪽에서 마지막 유효값 찾기
-        let prevVal=null,prevIdx=-1;
-        for(let j=i-1;j>=0;j--){if(rankData[j]!==null){prevVal=rankData[j];prevIdx=j;break;}}
-        // 뒤쪽에서 다음 유효값 찾기
-        let nextVal=null,nextIdx=-1;
-        for(let j=i+1;j<rankData.length;j++){if(rankData[j]!==null){nextVal=rankData[j];nextIdx=j;break;}}
-        // 보간
-        if(prevVal!==null&&nextVal!==null){
-          const ratio=(i-prevIdx)/(nextIdx-prevIdx);
-          ghostData[i]=Math.round(prevVal+(nextVal-prevVal)*ratio);
-        } else if(prevVal!==null){
-          ghostData[i]=prevVal;
-        } else if(nextVal!==null){
-          ghostData[i]=nextVal;
-        }
-      }
-    }
+    // null 구간은 105위(차트 아래)로 채워서 "아래에서 올라오는" 느낌
+    const OUT_RANK=105;
+    const ghostData=rankData.map((v,i)=>{
+      if(v!==null) return v;
+      return OUT_RANK;
+    });
 
     const ds=[
       // 회색 점선 (순위권 밖 구간 연결)
@@ -447,10 +422,10 @@ function drawChart(labels,ds,showLegend,rawData){
       }
     },
     scales:{
-      y:{reverse:true,min:0,suggestedMax:30,
+      y:{reverse:true,min:0,max:110,
         afterFit:function(axis){axis.paddingTop=20;},
-        ticks:{callback:v=>v===0?'':v+"위",font:{size:11},color:"rgba(21,21,21,.3)",stepSize:undefined},
-        grid:{color:ctx=>ctx.tick.value===0?'transparent':"rgba(21,21,21,.04)"}},
+        ticks:{callback:v=>v===0?'':v>100?'순위권 밖':v+"위",font:{size:11},color:ctx=>ctx.tick.value>100?"rgba(21,21,21,.15)":"rgba(21,21,21,.3)",stepSize:undefined},
+        grid:{color:ctx=>ctx.tick.value===0||ctx.tick.value>100?'transparent':"rgba(21,21,21,.04)"}},
       x:{ticks:{font:{size:10},color:"rgba(21,21,21,.3)",maxRotation:45,autoSkip:true,maxTicksLimit:10},grid:{display:false}}
     }
   }});
