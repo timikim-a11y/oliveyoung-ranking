@@ -7,11 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--oy-yellow:#F5FF50;--oy-yellow-bg:#F5FFB0;--oy-yellow-soft:#FAFFD6;--oy-black:#151515;--oy-bk7:rgba(21,21,21,.7);--oy-bk5:rgba(21,21,21,.5);--oy-bk3:rgba(21,21,21,.3);--oy-bk1:rgba(21,21,21,.1);--bg:#f7f7f5;--card:#fff;--border:#e8e8e4}
+:root{--oy-yellow:#F5FF50;--oy-yellow-bg:#F5FFB0;--oy-yellow-soft:#FAFFD6;--oy-black:#151515;--oy-bk7:rgba(21,21,21,.7);--oy-bk5:rgba(21,21,21,.5);--oy-bk3:rgba(21,21,21,.3);--oy-bk1:rgba(21,21,21,.1);--bg:#f7f7f5;--card:#fff;--border:#e8e8e4;--st-normal:#22c55e;--st-sale:#ef4444;--st-soldout:#151515;--st-out:#9ca3af}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-black);-webkit-font-smoothing:antialiased;min-height:100vh}
 
-/* Header */
 .hd{background:var(--oy-black);padding:16px 32px;display:flex;align-items:center;gap:14px}
 .hd h1{font-size:16px;font-weight:700;color:#fff}
 .hd p{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
@@ -19,7 +18,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 .hd-status .dot{width:7px;height:7px;border-radius:50%;background:var(--oy-yellow);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Period filter */
 .pf{background:var(--card);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pf-label{font-size:13px;font-weight:600;flex-shrink:0}
 .pf-btns{display:flex;gap:5px;flex-wrap:wrap}
@@ -32,7 +30,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 .dr span{font-size:11px;color:var(--oy-bk3)}
 .dr button{padding:4px 10px;border-radius:5px;border:none;background:var(--oy-black);color:var(--oy-yellow);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
 
-/* Categories */
 .cats{background:var(--card);border-bottom:1px solid var(--border);padding:12px 32px}
 .cats-label{font-size:12px;color:var(--oy-bk5);margin-bottom:8px}
 .cats-grid{display:flex;flex-wrap:wrap;gap:6px}
@@ -40,39 +37,43 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 .cat-btn:hover{border-color:var(--oy-bk3);color:var(--oy-black)}
 .cat-btn.on{background:var(--oy-yellow);color:var(--oy-black);border-color:var(--oy-yellow);font-weight:700}
 
-/* Search */
 .sb{background:var(--card);border-bottom:1px solid var(--border);padding:9px 32px;display:flex;gap:8px;align-items:center}
 .sb input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:var(--bg);outline:none}
 .sb input:focus{border-color:var(--oy-black)}
 .sb button{padding:8px 16px;background:var(--oy-black);color:var(--oy-yellow);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 
-/* Main */
 .main{display:flex;padding:14px 32px 40px;gap:14px;min-height:calc(100vh - 260px)}
 
-/* Left */
-.pl{width:360px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
+.pl{width:370px;flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
 .pl-hd{padding:12px 16px;border-bottom:1px solid #f0f0ec;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;background:var(--oy-yellow-soft)}
 .pl-hd .cnt{font-weight:400;color:var(--oy-bk5);font-size:12px}
 .rl{flex:1;overflow-y:auto;max-height:620px}
-.ri{display:flex;align-items:center;gap:7px;padding:10px 16px;border-bottom:1px solid #f7f7f5;cursor:pointer;transition:all .1s;border-left:3px solid transparent}
+.ri{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid #f7f7f5;cursor:pointer;transition:all .1s;border-left:3px solid transparent}
 .ri:hover{background:var(--oy-yellow-soft)}
 .ri.on{background:var(--oy-yellow-soft);border-left-color:var(--oy-black)}
 .rn{width:22px;text-align:center;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--oy-bk3)}
 .ri:nth-child(-n+3) .rn{color:var(--oy-black);font-size:14px}
 .rc{width:24px;text-align:center;font-size:10px;font-weight:600}
 .rc.up{color:#ef4444}.rc.dn{color:#3b82f6}.rc.sm{color:var(--oy-bk3)}.rc.nw{color:#f59e0b;font-weight:700}
+/* 상태 표시 dot */
+.st-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.st-normal{background:var(--st-normal)}
+.st-sale{background:var(--st-sale)}
+.st-soldout{background:var(--st-soldout)}
+.st-out{background:var(--st-out)}
 .rname{flex:1;min-width:0;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rbrand{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
 
-/* Right */
 .pr{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
 .ch-hd{padding:14px 20px;border-bottom:1px solid #f0f0ec}
 .ch-title{font-size:15px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
 .ch-title .tag{padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;background:var(--oy-yellow);color:var(--oy-black)}
 .ch-sub{font-size:12px;color:var(--oy-bk5)}
-.ch-legend{padding:7px 20px;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--oy-bk5);border-bottom:1px solid #f7f7f5}
+.ch-legend{padding:7px 20px;display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--oy-bk5);border-bottom:1px solid #f7f7f5}
 .lg-i{display:flex;align-items:center;gap:4px}
 .lg-l{width:12px;height:3px;border-radius:2px}
+.lg-d{width:7px;height:7px;border-radius:50%}
+.lg-do{width:7px;height:7px;border-radius:50%;border:2px solid;box-sizing:border-box}
 .ch-area{flex:1;padding:14px 14px 8px;position:relative;min-height:380px}
 .ch-empty{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--oy-bk3);font-size:13px}
 .ch-empty .ic{font-size:36px}
@@ -109,9 +110,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
   <div class="pf-label">📅 기간</div>
   <div class="pf-btns" id="pfBtns"></div>
   <div class="dr">
-    <input type="date" id="dFrom">
-    <span>~</span>
-    <input type="date" id="dTo">
+    <input type="date" id="dFrom"><span>~</span><input type="date" id="dTo">
     <button onclick="applyRange()">적용</button>
   </div>
 </div>
@@ -145,16 +144,20 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
           <div class="ch-sub" id="chSub">상품을 선택하세요</div>
         </div>
         <div class="cmp-tog" onclick="toggleCmp()">
-          📊 비교
+          📊 여러상품 비교하기
           <div class="tog" id="cmpTog"><div class="tog-k"></div></div>
         </div>
       </div>
     </div>
     <div class="ch-legend">
-      <span class="lg-i"><span class="lg-l" style="background:#22c55e"></span>정상판매</span>
-      <span class="lg-i"><span class="lg-l" style="background:#ef4444"></span>할인</span>
-      <span class="lg-i"><span class="lg-l" style="background:#151515"></span>품절</span>
-      <span class="lg-i"><span class="lg-l" style="background:#9ca3af"></span>순위권 밖</span>
+      <span class="lg-i"><span class="lg-l" style="background:var(--st-normal)"></span>정상판매</span>
+      <span class="lg-i"><span class="lg-l" style="background:var(--st-sale)"></span>할인</span>
+      <span class="lg-i"><span class="lg-l" style="background:var(--st-soldout)"></span>품절</span>
+      <span class="lg-i"><span class="lg-l" style="background:var(--st-out)"></span>순위권 밖</span>
+      <span class="lg-i"><span class="lg-do" style="border-color:var(--st-sale)"></span>할인 시작</span>
+      <span class="lg-i"><span class="lg-do" style="border-color:var(--st-out)"></span>할인 종료</span>
+      <span class="lg-i"><span class="lg-d" style="background:var(--st-soldout)"></span>품절</span>
+      <span class="lg-i"><span class="lg-d" style="background:var(--st-normal)"></span>품절 해제</span>
     </div>
     <div class="ch-area">
       <canvas id="cv"></canvas>
@@ -164,185 +167,133 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 </div>
 
 <script>
-// ══════════ CONFIG ══════════
-const GH_USER = "timikim-a11y";
-const GH_REPO = "oliveyoung-ranking";
-// ════════════════════════════
+const GH_USER="timikim-a11y",GH_REPO="oliveyoung-ranking";
+const RAW=`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data`;
+const API=`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data`;
+const CATS=["전체","스킨케어","마스크팩","클렌징","선케어","메이크업","네일","뷰티소품","더모코스메틱","맨즈에딧","향수/디퓨저","헤어케어","바디케어","건강식품","푸드","구강용품","헬스/건강용품","위생용품","패션","홈리빙/가전","취미/팬시"];
+const CMP_C=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
+const ST_C={"정상판매":"#22c55e","할인":"#ef4444","품절":"#151515"};
 
-const RAW = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data`;
-const API = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data`;
+function kst(s){const d=new Date(s);const u=d.getTime()+d.getTimezoneOffset()*6e4;return new Date(u+324e5)}
+function fmtFull(s){const d=kst(s);return`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())} KST`}
+function fmtShort(s){const d=kst(s);return`${d.getMonth()+1}/${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())}`}
+function kstDate(s){const d=kst(s);return`${d.getFullYear()}-${S(d.getMonth()+1)}-${S(d.getDate())}`}
+function kstMonth(s){const d=kst(s);return`${d.getFullYear()}-${S(d.getMonth()+1)}`}
+function S(n){return String(n).padStart(2,"0")}
 
-const CATS = [
-  "전체","스킨케어","마스크팩","클렌징","선케어","메이크업","네일","뷰티소품",
-  "더모코스메틱","맨즈에딧","향수/디퓨저","헤어케어","바디케어",
-  "건강식품","푸드","구강용품","헬스/건강용품","위생용품","패션","홈리빙/가전","취미/팬시"
-];
-const CMP_C = ["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
-
-// ── KST helpers ──
-// updated_at은 이미 KST ISO string (예: "2026-04-23T15:11:00+09:00")
-// 또는 UTC ISO string → 항상 Date로 파싱 후 KST 포맷
-function kst(s) {
-  const d = new Date(s);
-  // JS Date는 로컬타임으로 변환하므로, 강제로 KST offset 적용
-  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-  return new Date(utc + 9 * 3600000);
+// 상품 매칭: id가 있으면 id로, 없으면 brand+name+category로
+function matchProd(a,b){
+  if(a.id&&b.id) return a.id===b.id&&a.category===b.category;
+  return a.brand===b.brand&&a.name===b.name&&a.category===b.category;
 }
-function fmtFull(s) { const d=kst(s); return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())} KST`; }
-function fmtShort(s) { const d=kst(s); return `${d.getMonth()+1}/${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())}`; }
-function kstDate(s) { const d=kst(s); return `${d.getFullYear()}-${S(d.getMonth()+1)}-${S(d.getDate())}`; }
-function kstMonth(s) { const d=kst(s); return `${d.getFullYear()}-${S(d.getMonth()+1)}`; }
-function S(n) { return String(n).padStart(2,"0"); }
+function findProd(prods,target){
+  return prods.find(p=>matchProd(p,target))||null;
+}
 
-// ── State ──
-let allFiles=[], allData=[], fData=[];
-let curCat="전체", curPeriod="all", selProd=null, cmpMode=false, cmpList=[], chart=null;
+let allFiles=[],allData=[],fData=[];
+let curCat="전체",curPeriod="all",selProd=null,cmpMode=false,cmpList=[],chart=null;
 
-// ── Init ──
-document.addEventListener("DOMContentLoaded", async()=>{
+document.addEventListener("DOMContentLoaded",async()=>{
   renderCats();
   document.getElementById("q").addEventListener("keyup",e=>{if(e.key==="Enter")renderList()});
-  const t=new Date(), ts=t.toISOString().split("T")[0];
-  const m=new Date(t); m.setMonth(m.getMonth()-1);
+  const t=new Date(),ts=t.toISOString().split("T")[0];
+  const m=new Date(t);m.setMonth(m.getMonth()-1);
   document.getElementById("dTo").value=ts;
   document.getElementById("dFrom").value=m.toISOString().split("T")[0];
   await load();
 });
 
-async function load() {
-  try {
-    const r=await fetch(API); if(!r.ok) throw 0;
+async function load(){
+  try{
+    const r=await fetch(API);if(!r.ok)throw 0;
     const files=await r.json();
     allFiles=files.filter(f=>f.name.endsWith(".json")&&f.name!=="latest.json"&&f.name!==".gitkeep").sort((a,b)=>a.name.localeCompare(b.name));
-    if(!allFiles.length) throw 0;
-
-    // 병렬 로드 (최근 100개, 5개씩 배치)
-    const toLoad=allFiles.slice(-100);
-    allData=[];
+    if(!allFiles.length)throw 0;
+    const toLoad=allFiles.slice(-100);allData=[];
     for(let i=0;i<toLoad.length;i+=5){
       const batch=toLoad.slice(i,i+5);
       const res=await Promise.allSettled(batch.map(f=>fetch(f.download_url).then(r=>r.json())));
       res.forEach(r=>{if(r.status==="fulfilled")allData.push(r.value)});
     }
-    renderPeriod(); applyFilter();
+    renderPeriod();applyFilter();
     document.getElementById("ndb").style.display="none";
-  } catch(e) {
-    try {
-      const r=await fetch(`${RAW}/latest.json`);
-      if(!r.ok) throw 0;
-      const d=await r.json();
-      allData=[d]; fData=[d]; renderPeriod(); showTime(d); renderList();
-      document.getElementById("ndb").style.display="none";
-    } catch {
-      document.getElementById("ndb").style.display="flex";
-      document.getElementById("rl").innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';
-    }
+  }catch(e){
+    try{const r=await fetch(`${RAW}/latest.json`);if(!r.ok)throw 0;const d=await r.json();allData=[d];fData=[d];renderPeriod();showTime(d);renderList();document.getElementById("ndb").style.display="none";}
+    catch{document.getElementById("ndb").style.display="flex";document.getElementById("rl").innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';}
   }
 }
 
-// ── Period ──
-function renderPeriod() {
-  const months=new Set();
-  allData.forEach(d=>{if(d.updated_at)months.add(kstMonth(d.updated_at))});
+function renderPeriod(){
+  const months=new Set();allData.forEach(d=>{if(d.updated_at)months.add(kstMonth(d.updated_at))});
   const sorted=[...months].sort().reverse();
-  const c=document.getElementById("pfBtns");
   let h='';
-  [["all","전체"],["today","오늘"],["7d","7일"],["30d","30일"]].forEach(([k,l])=>{
-    h+=`<button class="pf-btn ${curPeriod===k?'on':''}" onclick="setPeriod('${k}')">${l}</button>`;
-  });
-  sorted.forEach(m=>{
-    const[y,mo]=m.split("-");
-    h+=`<button class="pf-btn ${curPeriod===m?'on':''}" onclick="setPeriod('${m}')">${y}년 ${+mo}월</button>`;
-  });
-  c.innerHTML=h;
+  [["all","전체"],["today","오늘"],["7d","7일"],["30d","30일"]].forEach(([k,l])=>{h+=`<button class="pf-btn ${curPeriod===k?'on':''}" onclick="setPeriod('${k}')">${l}</button>`;});
+  sorted.forEach(m=>{const[y,mo]=m.split("-");h+=`<button class="pf-btn ${curPeriod===m?'on':''}" onclick="setPeriod('${m}')">${y}년 ${+mo}월</button>`;});
+  document.getElementById("pfBtns").innerHTML=h;
 }
-
 function setPeriod(p){curPeriod=p;renderPeriod();applyFilter();}
-
 function applyFilter(){
   const now=kst(new Date().toISOString());
-  if(curPeriod==="all") fData=[...allData];
-  else if(curPeriod==="today"){
-    const td=`${now.getFullYear()}-${S(now.getMonth()+1)}-${S(now.getDate())}`;
-    fData=allData.filter(d=>kstDate(d.updated_at)===td);
-  } else if(curPeriod==="7d"){
-    const cut=new Date(now.getTime()-7*864e5);
-    fData=allData.filter(d=>kst(d.updated_at)>=cut);
-  } else if(curPeriod==="30d"){
-    const cut=new Date(now.getTime()-30*864e5);
-    fData=allData.filter(d=>kst(d.updated_at)>=cut);
-  } else {
-    fData=allData.filter(d=>kstMonth(d.updated_at)===curPeriod);
-  }
-  if(!fData.length&&allData.length) fData=allData.slice(-1);
-  if(fData.length) showTime(fData[fData.length-1]);
-  renderList(); updateChart();
+  if(curPeriod==="all")fData=[...allData];
+  else if(curPeriod==="today"){const td=kstDate(new Date().toISOString());fData=allData.filter(d=>kstDate(d.updated_at)===td);}
+  else if(curPeriod==="7d"){const c=new Date(now.getTime()-7*864e5);fData=allData.filter(d=>kst(d.updated_at)>=c);}
+  else if(curPeriod==="30d"){const c=new Date(now.getTime()-30*864e5);fData=allData.filter(d=>kst(d.updated_at)>=c);}
+  else fData=allData.filter(d=>kstMonth(d.updated_at)===curPeriod);
+  if(!fData.length&&allData.length)fData=allData.slice(-1);
+  if(fData.length)showTime(fData[fData.length-1]);
+  renderList();updateChart();
 }
-
 function applyRange(){
-  const f=document.getElementById("dFrom").value, t=document.getElementById("dTo").value;
-  if(!f||!t)return;
-  curPeriod="custom"; renderPeriod();
-  const fd=new Date(f+"T00:00:00"), td=new Date(t+"T23:59:59");
+  const f=document.getElementById("dFrom").value,t=document.getElementById("dTo").value;if(!f||!t)return;
+  curPeriod="custom";renderPeriod();
+  const fd=new Date(f+"T00:00:00"),td=new Date(t+"T23:59:59");
   fData=allData.filter(d=>{const k=kst(d.updated_at);return k>=fd&&k<=td});
   if(!fData.length&&allData.length)fData=allData.slice(-1);
   if(fData.length)showTime(fData[fData.length-1]);
-  renderList(); updateChart();
+  renderList();updateChart();
 }
-
 function showTime(d){document.getElementById("lastUpdate").textContent=`마지막 업데이트: ${fmtFull(d.updated_at)}`;}
 
-// ── Categories ──
 function renderCats(){
-  document.getElementById("catGrid").innerHTML=CATS.map(c=>
-    `<button class="cat-btn ${c===curCat?'on':''}" onclick="setCat('${c}')">${c}</button>`
-  ).join("");
+  document.getElementById("catGrid").innerHTML=CATS.map(c=>`<button class="cat-btn ${c===curCat?'on':''}" onclick="setCat('${c}')">${c}</button>`).join("");
 }
-function setCat(c){
-  curCat=c; selProd=null; cmpList=[];
-  renderCats(); renderList(); updateChart();
-  document.getElementById("chCat").textContent=`[${c}]`;
-  document.getElementById("chTag").textContent=c;
-}
+function setCat(c){curCat=c;selProd=null;cmpList=[];renderCats();renderList();updateChart();document.getElementById("chCat").textContent=`[${c}]`;document.getElementById("chTag").textContent=c;}
 
-// ── Ranking list ──
 function renderList(){
   const el=document.getElementById("rl");
   if(!fData.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';return}
-
   const latest=fData[fData.length-1];
-  let prods=latest.products||[];
-
-  // ★ 핵심: 항상 해당 카테고리로 크롤링된 데이터만 표시
-  // "전체"도 올리브영의 "전체" 탭에서 크롤링한 100개만 보여줌
-  prods=prods.filter(p=>p.category===curCat);
-
+  let prods=(latest.products||[]).filter(p=>p.category===curCat);
   const q=document.getElementById("q").value.trim().toLowerCase();
-  if(q) prods=prods.filter(p=>(p.brand||"").toLowerCase().includes(q)||(p.name||"").toLowerCase().includes(q));
+  if(q)prods=prods.filter(p=>(p.brand||"").toLowerCase().includes(q)||(p.name||"").toLowerCase().includes(q));
   prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
-
   document.getElementById("pTitle").textContent=`${curCat} 랭킹`;
   document.getElementById("pCnt").textContent=`(${prods.length})`;
-
   if(!prods.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터가 없습니다</div>';return}
 
   el.innerHTML=prods.map((p,i)=>{
-    const isOn=!cmpMode&&selProd&&selProd.brand===p.brand&&selProd.name===p.name&&selProd.category===p.category;
-    const isCmp=cmpMode&&cmpList.find(c=>c.brand===p.brand&&c.name===p.name&&c.category===p.category);
-    const ci=cmpList.findIndex(c=>c.brand===p.brand&&c.name===p.name&&c.category===p.category);
+    const isOn=!cmpMode&&selProd&&matchProd(selProd,p);
+    const isCmp=cmpMode&&cmpList.find(c=>matchProd(c,p));
+    const ci=cmpList.findIndex(c=>matchProd(c,p));
 
     let ch='';
     if(fData.length>=2){
       const prev=fData[fData.length-2];
-      const pi=(prev.products||[]).find(pp=>pp.brand===p.brand&&pp.name===p.name&&pp.category===p.category);
+      const pi=findProd(prev.products||[],p);
       if(pi){const d=(pi.rank||999)-(p.rank||999);
         ch=d>0?`<div class="rc up">▲${d}</div>`:d<0?`<div class="rc dn">▼${Math.abs(d)}</div>`:`<div class="rc sm">-</div>`;
       }else ch=`<div class="rc nw">NEW</div>`;
     }
+
+    // 상태 dot
+    const st=p.status||"정상판매";
+    const stClass=st==="할인"?"st-sale":st==="품절"?"st-soldout":"st-normal";
     const hue=((p.brand||"").charCodeAt(0)*37)%360;
+
     return `<div class="ri ${isOn||isCmp?'on':''}" onclick="sel(${i})">
       <div class="rn">${p.rank||i+1}</div>${ch}
-      <div class="rname">${isCmp?`<span style="color:${CMP_C[ci]};font-size:9px">● </span>`:''}${trunc(p.name,28)}</div>
+      <div class="st-dot ${stClass}" title="${st}"></div>
+      <div class="rname">${isCmp?`<span style="color:${CMP_C[ci]};font-size:9px">● </span>`:''}${trunc(p.name,26)}</div>
       <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%)">${p.brand||''}</div>
     </div>`;
   }).join("");
@@ -350,56 +301,111 @@ function renderList(){
 }
 
 function trunc(s,n){return !s?'':s.length>n?s.slice(0,n)+'...':s}
-
 function sel(i){
   const p=document.getElementById("rl")._p;if(!p||!p[i])return;
   const prod=p[i];
-  if(cmpMode){
-    const x=cmpList.findIndex(c=>c.brand===prod.brand&&c.name===prod.name&&c.category===prod.category);
-    if(x>=0)cmpList.splice(x,1);else if(cmpList.length<5)cmpList.push(prod);
-    renderList();updateChart();return;
-  }
+  if(cmpMode){const x=cmpList.findIndex(c=>matchProd(c,prod));if(x>=0)cmpList.splice(x,1);else if(cmpList.length<5)cmpList.push(prod);renderList();updateChart();return;}
   selProd=prod;renderList();updateChart();
 }
 
-// ── Chart ──
 function updateChart(){
   const ee=document.getElementById("chE"),cv=document.getElementById("cv"),sub=document.getElementById("chSub");
-
-  if(cmpMode&&!cmpList.length){empty("📊","비교할 상품을 선택하세요 (최대 5개)");sub.textContent="상품을 선택하세요";return}
+  if(cmpMode&&!cmpList.length){empty("📊","비교할 상품을 클릭하세요 (최대 5개)");sub.textContent="상품을 선택하세요";return}
   if(!cmpMode&&!selProd){empty("📈","왼쪽에서 상품을 선택하세요");sub.textContent="상품을 선택하세요";return}
-
   ee.style.display="none";cv.style.display="block";
 
   const labels=fData.map(d=>fmtShort(d.updated_at));
-  let ds=[];
 
   if(cmpMode){
-    cmpList.forEach((p,i)=>{
-      const data=fData.map(snap=>{
-        const f=(snap.products||[]).find(sp=>sp.brand===p.brand&&sp.name===p.name&&sp.category===p.category);
-        return f?(f.rank||null):null;
-      });
-      ds.push({label:p.brand,data,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"15",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:true});
+    // 비교 모드: 고정 색상
+    const ds=cmpList.map((p,i)=>{
+      const data=fData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
+      return{label:p.brand,data,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"15",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:true};
     });
     sub.textContent=cmpList.map(p=>`${p.brand}(${p.rank}위)`).join(' · ');
+    drawChart(labels,ds,true);
   } else {
-    const data=fData.map(snap=>{
-      const f=(snap.products||[]).find(sp=>sp.brand===selProd.brand&&sp.name===selProd.name&&sp.category===selProd.category);
-      return f?(f.rank||null):null;
-    });
-    ds.push({label:selProd.brand,data,borderColor:"#151515",backgroundColor:"rgba(245,255,80,.15)",borderWidth:2.5,pointRadius:3,pointBackgroundColor:"#151515",tension:.3,fill:true,spanGaps:true});
-    sub.textContent=`${selProd.name} · ${selProd.brand} · ${selProd.rank}위`;
-  }
+    // 단일 상품: 상태별 색상으로 구간을 나눠 표시
+    const ranks=[], colors=[], pointColors=[], pointBorders=[];
+    let prevStatus=null;
 
+    fData.forEach((snap,idx)=>{
+      const f=findProd(snap.products||[],selProd);
+      if(f){
+        const st=f.status||"정상판매";
+        const c=ST_C[st]||"#9ca3af";
+        ranks.push(f.rank||null);
+        colors.push(c);
+        pointColors.push(c);
+
+        // 상태 변경 감지 → 특수 포인트
+        if(prevStatus&&prevStatus!==st){
+          // 할인 시작/종료, 품절/해제 등
+          pointBorders.push("#fff");
+        } else {
+          pointBorders.push(c);
+        }
+        prevStatus=st;
+      } else {
+        ranks.push(null);
+        colors.push("#9ca3af");
+        pointColors.push("#9ca3af");
+        pointBorders.push("#9ca3af");
+        prevStatus=null;
+      }
+    });
+
+    // Chart.js segment styling으로 구간별 색상 적용
+    const ds=[{
+      label:selProd.brand,
+      data:ranks,
+      segment:{
+        borderColor:ctx=>{
+          const i=ctx.p0DataIndex;
+          return colors[i]||"#9ca3af";
+        },
+      },
+      borderColor:colors[0]||"#22c55e",
+      backgroundColor:"rgba(245,255,80,.1)",
+      borderWidth:2.5,
+      pointRadius:4,
+      pointBackgroundColor:pointColors,
+      pointBorderColor:pointBorders,
+      pointBorderWidth:2,
+      tension:.3,
+      fill:true,
+      spanGaps:true,
+    }];
+
+    const currentSt=selProd.status||"정상판매";
+    sub.textContent=`${selProd.name} · ${selProd.brand} · ${selProd.rank}위 · ${currentSt}`;
+    drawChart(labels,ds,false);
+  }
+}
+
+function drawChart(labels,ds,showLegend){
   if(chart)chart.destroy();
-  chart=new Chart(cv,{type:"line",data:{labels,datasets:ds},options:{
+  chart=new Chart(document.getElementById("cv"),{type:"line",data:{labels,datasets:ds},options:{
     responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
     plugins:{
-      legend:{display:cmpMode,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"}}},
+      legend:{display:showLegend,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"}}},
       tooltip:{backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:10,
         titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
-        callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}위`}}
+        callbacks:{
+          label:c=>{
+            const rank=c.parsed.y;
+            // 해당 시점의 상태 표시
+            const snapIdx=c.dataIndex;
+            const snap=fData[snapIdx];
+            if(snap&&selProd&&!cmpMode){
+              const f=findProd(snap.products||[],selProd);
+              const st=f?f.status||"정상판매":"순위권 밖";
+              return `${c.dataset.label}: ${rank}위 (${st})`;
+            }
+            return `${c.dataset.label}: ${rank}위`;
+          }
+        }
+      }
     },
     scales:{
       y:{reverse:true,min:1,suggestedMax:30,ticks:{callback:v=>v+"위",font:{size:11},color:"rgba(21,21,21,.3)"},grid:{color:"rgba(21,21,21,.04)"}},
@@ -413,11 +419,7 @@ function empty(ic,txt){
   e.style.display="flex";e.innerHTML=`<span class="ic">${ic}</span>${txt}`;
   c.style.display="none";if(chart){chart.destroy();chart=null}
 }
-function toggleCmp(){
-  cmpMode=!cmpMode;cmpList=[];
-  document.getElementById("cmpTog").classList.toggle("on",cmpMode);
-  renderList();updateChart();
-}
+function toggleCmp(){cmpMode=!cmpMode;cmpList=[];document.getElementById("cmpTog").classList.toggle("on",cmpMode);renderList();updateChart();}
 </script>
 </body>
 </html>
