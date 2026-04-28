@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--oy-yellow:#F5FF50;--oy-yellow-bg:#F5FFB0;--oy-yellow-soft:#FAFFD6;--oy-black:#151515;--oy-bk7:rgba(21,21,21,.7);--oy-bk5:rgba(21,21,21,.5);--oy-bk3:rgba(21,21,21,.3);--oy-bk1:rgba(21,21,21,.1);--bg:#f7f7f5;--card:#fff;--border:#e8e8e4;--st-normal:#22c55e;--st-sale:#ef4444;--st-soldout:#151515;--st-out:#9ca3af}
+:root{--oy-yellow:#F5FF50;--oy-yellow-bg:#F5FFB0;--oy-yellow-soft:#FAFFD6;--oy-black:#151515;--oy-bk7:rgba(21,21,21,.7);--oy-bk5:rgba(21,21,21,.5);--oy-bk3:rgba(21,21,21,.3);--oy-bk1:rgba(21,21,21,.1);--bg:#f7f7f5;--card:#fff;--border:#e8e8e4;--c-rank:#22c55e;--c-out:#bbb}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-black);-webkit-font-smoothing:antialiased;min-height:100vh}
 
@@ -55,25 +55,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 .ri:nth-child(-n+3) .rn{color:var(--oy-black);font-size:14px}
 .rc{width:24px;text-align:center;font-size:10px;font-weight:600}
 .rc.up{color:#ef4444}.rc.dn{color:#3b82f6}.rc.sm{color:var(--oy-bk3)}.rc.nw{color:#f59e0b;font-weight:700}
-/* 상태 표시 dot */
-.st-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.st-normal{background:var(--st-normal)}
-.st-sale{background:var(--st-sale)}
-.st-soldout{background:var(--st-soldout)}
-.st-out{background:var(--st-out)}
 .rname{flex:1;min-width:0;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rbrand{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
+.rprice{font-size:10px;color:var(--oy-bk5);font-family:'Outfit',sans-serif;white-space:nowrap}
 
 .pr{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
 .ch-hd{padding:14px 20px;border-bottom:1px solid #f0f0ec}
 .ch-title{font-size:15px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
 .ch-title .tag{padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;background:var(--oy-yellow);color:var(--oy-black)}
 .ch-sub{font-size:12px;color:var(--oy-bk5)}
-.ch-legend{padding:7px 20px;display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--oy-bk5);border-bottom:1px solid #f7f7f5}
-.lg-i{display:flex;align-items:center;gap:4px}
-.lg-l{width:12px;height:3px;border-radius:2px}
-.lg-d{width:7px;height:7px;border-radius:50%}
-.lg-do{width:7px;height:7px;border-radius:50%;border:2px solid;box-sizing:border-box}
+.ch-legend{padding:7px 20px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--oy-bk5);border-bottom:1px solid #f7f7f5}
+.lg-i{display:flex;align-items:center;gap:5px}
+.lg-l{width:16px;height:3px;border-radius:2px}
+.lg-dash{width:16px;height:0;border-top:2px dashed}
 .ch-area{flex:1;padding:14px 14px 8px;position:relative;min-height:380px}
 .ch-empty{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--oy-bk3);font-size:13px}
 .ch-empty .ic{font-size:36px}
@@ -150,14 +144,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
       </div>
     </div>
     <div class="ch-legend">
-      <span class="lg-i"><span class="lg-l" style="background:var(--st-normal)"></span>정상판매</span>
-      <span class="lg-i"><span class="lg-l" style="background:var(--st-sale)"></span>할인</span>
-      <span class="lg-i"><span class="lg-l" style="background:var(--st-soldout)"></span>품절</span>
-      <span class="lg-i"><span class="lg-l" style="background:var(--st-out)"></span>순위권 밖</span>
-      <span class="lg-i"><span class="lg-do" style="border-color:var(--st-sale)"></span>할인 시작</span>
-      <span class="lg-i"><span class="lg-do" style="border-color:var(--st-out)"></span>할인 종료</span>
-      <span class="lg-i"><span class="lg-d" style="background:var(--st-soldout)"></span>품절</span>
-      <span class="lg-i"><span class="lg-d" style="background:var(--st-normal)"></span>품절 해제</span>
+      <span class="lg-i"><span class="lg-l" style="background:var(--c-rank)"></span>순위권</span>
+      <span class="lg-i"><span class="lg-dash" style="border-color:var(--c-out)"></span>순위권 밖</span>
     </div>
     <div class="ch-area">
       <canvas id="cv"></canvas>
@@ -172,7 +160,6 @@ const RAW=`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data`;
 const API=`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data`;
 const CATS=["전체","스킨케어","마스크팩","클렌징","선케어","메이크업","네일","뷰티소품","더모코스메틱","맨즈에딧","향수/디퓨저","헤어케어","바디케어","건강식품","푸드","구강용품","헬스/건강용품","위생용품","패션","홈리빙/가전","취미/팬시"];
 const CMP_C=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
-const ST_C={"정상판매":"#22c55e","할인":"#ef4444","품절":"#151515"};
 
 function kst(s){const d=new Date(s);const u=d.getTime()+d.getTimezoneOffset()*6e4;return new Date(u+324e5)}
 function fmtFull(s){const d=kst(s);return`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())} KST`}
@@ -181,14 +168,11 @@ function kstDate(s){const d=kst(s);return`${d.getFullYear()}-${S(d.getMonth()+1)
 function kstMonth(s){const d=kst(s);return`${d.getFullYear()}-${S(d.getMonth()+1)}`}
 function S(n){return String(n).padStart(2,"0")}
 
-// 상품 매칭: id가 있으면 id로, 없으면 brand+name+category로
 function matchProd(a,b){
-  if(a.id&&b.id) return a.id===b.id&&a.category===b.category;
+  if(a.id&&b.id)return a.id===b.id&&a.category===b.category;
   return a.brand===b.brand&&a.name===b.name&&a.category===b.category;
 }
-function findProd(prods,target){
-  return prods.find(p=>matchProd(p,target))||null;
-}
+function findProd(prods,target){return prods.find(p=>matchProd(p,target))||null}
 
 let allFiles=[],allData=[],fData=[];
 let curCat="전체",curPeriod="all",selProd=null,cmpMode=false,cmpList=[],chart=null;
@@ -275,7 +259,6 @@ function renderList(){
     const isOn=!cmpMode&&selProd&&matchProd(selProd,p);
     const isCmp=cmpMode&&cmpList.find(c=>matchProd(c,p));
     const ci=cmpList.findIndex(c=>matchProd(c,p));
-
     let ch='';
     if(fData.length>=2){
       const prev=fData[fData.length-2];
@@ -284,16 +267,12 @@ function renderList(){
         ch=d>0?`<div class="rc up">▲${d}</div>`:d<0?`<div class="rc dn">▼${Math.abs(d)}</div>`:`<div class="rc sm">-</div>`;
       }else ch=`<div class="rc nw">NEW</div>`;
     }
-
-    // 상태 dot
-    const st=p.status||"정상판매";
-    const stClass=st==="할인"?"st-sale":st==="품절"?"st-soldout":"st-normal";
     const hue=((p.brand||"").charCodeAt(0)*37)%360;
-
+    const priceStr=p.price?`${p.price}원`:'';
     return `<div class="ri ${isOn||isCmp?'on':''}" onclick="sel(${i})">
       <div class="rn">${p.rank||i+1}</div>${ch}
-      <div class="st-dot ${stClass}" title="${st}"></div>
-      <div class="rname">${isCmp?`<span style="color:${CMP_C[ci]};font-size:9px">● </span>`:''}${trunc(p.name,26)}</div>
+      <div class="rname">${isCmp?`<span style="color:${CMP_C[ci]};font-size:9px">● </span>`:''}${trunc(p.name,24)}</div>
+      <div class="rprice">${priceStr}</div>
       <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%)">${p.brand||''}</div>
     </div>`;
   }).join("");
@@ -317,92 +296,136 @@ function updateChart(){
   const labels=fData.map(d=>fmtShort(d.updated_at));
 
   if(cmpMode){
-    // 비교 모드: 고정 색상
+    // 비교모드: 각 상품별 고정 색상
     const ds=cmpList.map((p,i)=>{
       const data=fData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
-      return{label:p.brand,data,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"15",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:true};
+      return{label:p.brand,data,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"10",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:false};
     });
     sub.textContent=cmpList.map(p=>`${p.brand}(${p.rank}위)`).join(' · ');
     drawChart(labels,ds,true);
   } else {
-    // 단일 상품: 상태별 색상으로 구간을 나눠 표시
-    const ranks=[], colors=[], pointColors=[], pointBorders=[];
-    let prevStatus=null;
-
-    fData.forEach((snap,idx)=>{
+    // 단일 상품: 순위권=초록 실선, 순위권 밖 구간=회색 점선
+    // null 구간을 채워서 점선으로 연결
+    const rawData=fData.map(snap=>{
       const f=findProd(snap.products||[],selProd);
-      if(f){
-        const st=f.status||"정상판매";
-        const c=ST_C[st]||"#9ca3af";
-        ranks.push(f.rank||null);
-        colors.push(c);
-        pointColors.push(c);
-
-        // 상태 변경 감지 → 특수 포인트
-        if(prevStatus&&prevStatus!==st){
-          // 할인 시작/종료, 품절/해제 등
-          pointBorders.push("#fff");
-        } else {
-          pointBorders.push(c);
-        }
-        prevStatus=st;
-      } else {
-        ranks.push(null);
-        colors.push("#9ca3af");
-        pointColors.push("#9ca3af");
-        pointBorders.push("#9ca3af");
-        prevStatus=null;
-      }
+      return f?{rank:f.rank||null,price:f.price||'',inRank:true}:{rank:null,price:'',inRank:false};
     });
 
-    // Chart.js segment styling으로 구간별 색상 적용
-    const ds=[{
-      label:selProd.brand,
-      data:ranks,
-      segment:{
-        borderColor:ctx=>{
-          const i=ctx.p0DataIndex;
-          return colors[i]||"#9ca3af";
-        },
-      },
-      borderColor:colors[0]||"#22c55e",
-      backgroundColor:"rgba(245,255,80,.1)",
-      borderWidth:2.5,
-      pointRadius:4,
-      pointBackgroundColor:pointColors,
-      pointBorderColor:pointBorders,
-      pointBorderWidth:2,
-      tension:.3,
-      fill:true,
-      spanGaps:true,
-    }];
+    // 실제 순위 데이터 (null 유지)
+    const rankData=rawData.map(d=>d.inRank?d.rank:null);
 
-    const currentSt=selProd.status||"정상판매";
-    sub.textContent=`${selProd.name} · ${selProd.brand} · ${selProd.rank}위 · ${currentSt}`;
-    drawChart(labels,ds,false);
+    // 순위권 밖 구간을 점선으로 잇기 위한 보조 데이터셋
+    // null 구간의 앞뒤 값을 선형 보간하여 채움
+    const ghostData=[...rankData];
+    for(let i=0;i<ghostData.length;i++){
+      if(ghostData[i]===null){
+        // 앞쪽에서 마지막 유효값 찾기
+        let prevVal=null,prevIdx=-1;
+        for(let j=i-1;j>=0;j--){if(rankData[j]!==null){prevVal=rankData[j];prevIdx=j;break;}}
+        // 뒤쪽에서 다음 유효값 찾기
+        let nextVal=null,nextIdx=-1;
+        for(let j=i+1;j<rankData.length;j++){if(rankData[j]!==null){nextVal=rankData[j];nextIdx=j;break;}}
+        // 보간
+        if(prevVal!==null&&nextVal!==null){
+          const ratio=(i-prevIdx)/(nextIdx-prevIdx);
+          ghostData[i]=Math.round(prevVal+(nextVal-prevVal)*ratio);
+        } else if(prevVal!==null){
+          ghostData[i]=prevVal;
+        } else if(nextVal!==null){
+          ghostData[i]=nextVal;
+        }
+      }
+    }
+
+    const ds=[
+      // 회색 점선 (순위권 밖 구간 연결)
+      {
+        label:'순위권 밖',
+        data:ghostData,
+        borderColor:'#ccc',
+        borderDash:[5,4],
+        borderWidth:1.5,
+        pointRadius:0,
+        tension:.3,
+        fill:false,
+        spanGaps:true,
+        order:2,
+      },
+      // 초록 실선 (실제 순위)
+      {
+        label:selProd.brand,
+        data:rankData,
+        borderColor:'#22c55e',
+        backgroundColor:'rgba(34,197,94,.08)',
+        borderWidth:2.5,
+        pointRadius:4,
+        pointBackgroundColor:rankData.map((v,i)=>v!==null?'#22c55e':'transparent'),
+        pointBorderColor:rankData.map((v,i)=>v!==null?'#fff':'transparent'),
+        pointBorderWidth:2,
+        tension:.3,
+        fill:true,
+        spanGaps:false,
+        order:1,
+      },
+    ];
+
+    const priceStr=selProd.price?` · ${selProd.price}원`:'';
+    sub.textContent=`${selProd.name} · ${selProd.brand} · ${selProd.rank}위${priceStr}`;
+    drawChart(labels,ds,false,rawData);
   }
 }
 
-function drawChart(labels,ds,showLegend){
+function drawChart(labels,ds,showLegend,rawData){
   if(chart)chart.destroy();
   chart=new Chart(document.getElementById("cv"),{type:"line",data:{labels,datasets:ds},options:{
     responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
     plugins:{
-      legend:{display:showLegend,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"}}},
-      tooltip:{backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:10,
-        titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
+      legend:{display:showLegend,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"},filter:item=>item.text!=='순위권 밖'}},
+      tooltip:{
+        backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:12,
+        titleFont:{family:"'Noto Sans KR'",weight:"600",size:12},
+        bodyFont:{family:"'Noto Sans KR'",size:12},
+        filter:item=>item.dataset.label!=='순위권 밖',
         callbacks:{
-          label:c=>{
-            const rank=c.parsed.y;
-            // 해당 시점의 상태 표시
-            const snapIdx=c.dataIndex;
-            const snap=fData[snapIdx];
-            if(snap&&selProd&&!cmpMode){
-              const f=findProd(snap.products||[],selProd);
-              const st=f?f.status||"정상판매":"순위권 밖";
-              return `${c.dataset.label}: ${rank}위 (${st})`;
+          title:items=>{
+            if(!items.length)return'';
+            const idx=items[0].dataIndex;
+            const snap=fData[idx];
+            if(!snap)return items[0].label;
+            const d=kst(snap.updated_at);
+            return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())}`;
+          },
+          label:ctx=>{
+            const rank=ctx.parsed.y;
+            const idx=ctx.dataIndex;
+            if(cmpMode){
+              return `${ctx.dataset.label}: ${rank}위`;
             }
-            return `${c.dataset.label}: ${rank}위`;
+            // 단일 모드: 브랜드, 순위, 가격
+            const snap=fData[idx];
+            if(snap&&selProd){
+              const f=findProd(snap.products||[],selProd);
+              if(f){
+                const price=f.price?` · ${f.price}원`:'';
+                const inRank=rawData&&rawData[idx]&&rawData[idx].inRank;
+                const status=inRank?'':'(순위권 밖)';
+                return `${f.brand}: ${rank}위${price} ${status}`;
+              }
+            }
+            return `${ctx.dataset.label}: ${rank}위`;
+          },
+          afterLabel:ctx=>{
+            if(cmpMode){
+              const idx=ctx.dataIndex;
+              const snap=fData[idx];
+              const ci=ctx.datasetIndex;
+              const p=cmpList[ci];
+              if(snap&&p){
+                const f=findProd(snap.products||[],p);
+                if(f&&f.price)return `가격: ${f.price}원`;
+              }
+            }
+            return '';
           }
         }
       }
