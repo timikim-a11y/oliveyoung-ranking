@@ -422,10 +422,26 @@ function drawChart(labels,ds,showLegend,rawData){
       }
     },
     scales:{
-      y:{reverse:true,min:0,max:110,
-        afterFit:function(axis){axis.paddingTop=20;},
-        ticks:{callback:v=>v===0?'':v>100?'순위권 밖':v+"위",font:{size:11},color:ctx=>ctx.tick.value>100?"rgba(21,21,21,.15)":"rgba(21,21,21,.3)",stepSize:undefined},
-        grid:{color:ctx=>ctx.tick.value===0||ctx.tick.value>100?'transparent':"rgba(21,21,21,.04)"}},
+      y:{reverse:true,min:-1,max:110,
+        afterFit:function(axis){axis.paddingTop=30;},
+        ticks:{callback:v=>v<=0?'':v>100?'순위권 밖':v+"위",font:{size:11},color:ctx=>ctx.tick.value>100?"rgba(21,21,21,.15)":"rgba(21,21,21,.3)",
+          includeBounds:true,autoSkip:false,
+          stepSize:undefined,
+        },
+        afterBuildTicks:function(axis){
+          // 1위 눈금이 반드시 포함되도록
+          const ticks=axis.ticks.map(t=>t.value);
+          if(!ticks.includes(1)){
+            axis.ticks.unshift({value:1});
+            axis.ticks.sort((a,b)=>a.value-b.value);
+          }
+        },
+        grid:{color:ctx=>{
+          const v=ctx.tick.value;
+          if(v<=0||v>100)return'transparent';
+          if(v===1)return'rgba(21,21,21,.12)'; // 1위 라인 살짝 진하게
+          return"rgba(21,21,21,.04)";
+        }}},
       x:{ticks:{font:{size:10},color:"rgba(21,21,21,.3)",maxRotation:45,autoSkip:true,maxTicksLimit:10},grid:{display:false}}
     }
   }});
