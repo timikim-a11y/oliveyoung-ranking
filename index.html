@@ -109,6 +109,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 <!-- 메인 탭 -->
 <div class="main-tabs">
   <button class="main-tab on" id="tabRanking" onclick="switchMainTab('ranking')">📊 랭킹 트래커</button>
+  <button class="main-tab" id="tabManyo" onclick="switchMainTab('manyo')">🧙‍♀️ 마녀공장</button>
   <button class="main-tab" id="tabLikes" onclick="switchMainTab('likes')">❤️ 브랜드 좋아요</button>
 </div>
 
@@ -168,6 +169,38 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
   </div>
 </div>
 </div><!-- /rankingTab -->
+
+<!-- ═══ 마녀공장 탭 ═══ -->
+<div id="manyoTab" style="display:none">
+  <div class="pf">
+    <div class="pf-label">🧙‍♀️ 마녀공장 제품별 카테고리 순위 추이</div>
+    <div style="margin-left:auto;font-size:11px;color:var(--oy-bk5)" id="manyoUpdateTime"></div>
+  </div>
+  <div class="main">
+    <div class="pl">
+      <div class="pl-hd">🧙‍♀️ 마녀공장 제품 <span class="cnt" id="manyoCnt"></span></div>
+      <div class="rl" id="manyoList"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
+    </div>
+    <div class="pr">
+      <div class="ch-hd">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div class="ch-title">마녀공장 제품별 순위 트렌드</div>
+            <div class="ch-sub" id="manyoChSub">왼쪽에서 제품을 선택하세요 (최대 5개)</div>
+          </div>
+        </div>
+      </div>
+      <div class="ch-legend">
+        <span class="lg-i"><span class="lg-l" style="background:var(--c-rank)"></span>순위권</span>
+        <span class="lg-i"><span class="lg-dash" style="border-color:var(--c-out)"></span>순위권 밖</span>
+      </div>
+      <div class="ch-area">
+        <canvas id="manyoCv"></canvas>
+        <div class="ch-empty" id="manyoChE"><span class="ic">🧙‍♀️</span>왼쪽에서 제품을 선택하세요</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ 브랜드 좋아요 탭 ═══ -->
 <div id="likesTab" style="display:none">
@@ -560,13 +593,14 @@ function renderBrandList(){
       else if(diff<0)changeHtml=`<span style="color:#3b82f6;font-size:10px;font-weight:600">${diff.toLocaleString()}</span>`;
       else changeHtml=`<span style="color:var(--oy-bk3);font-size:10px">-</span>`;
     }
+    const isManyo=b.brand==="마녀공장";
     const hue=((b.brand||"").charCodeAt(0)*37)%360;
-    return `<div class="ri ${isSel?'on':''}" onclick="selBrand(${i})" style="gap:8px">
-      <div class="rn">${i+1}</div>
+    return `<div class="ri ${isSel?'on':''}" onclick="selBrand(${i})" style="gap:8px;${isManyo?'background:var(--oy-yellow-soft);border-left:3px solid var(--oy-black);':''}">
+      <div class="rn" ${isManyo?'style="color:var(--oy-black);font-size:15px"':''}>${i+1}</div>
       ${changeHtml}
       ${isSel?`<span style="color:${BRAND_COLORS[si%BRAND_COLORS.length]};font-size:9px">●</span>`:''}
-      <div class="rname">${b.brand}</div>
-      <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--oy-black)">${b.likes.toLocaleString()}</div>
+      <div class="rname" style="${isManyo?'font-weight:700;':''}">${isManyo?'🧙‍♀️ <b>'+b.brand+'</b>':b.brand}</div>
+      <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:${isManyo?'800':'600'};color:var(--oy-black)">${b.likes.toLocaleString()}</div>
       <div style="font-size:10px;color:var(--oy-bk3)">명</div>
     </div>`;
   }).join("");
@@ -654,17 +688,174 @@ function updateBrandChart(){
 
 // ── 탭 전환 ──
 let brandLoaded=false;
+let manyoLoaded=false;
 function switchMainTab(tab){
   const rankEl=document.getElementById("rankingTab");
   const likeEl=document.getElementById("likesTab");
+  const manyoEl=document.getElementById("manyoTab");
   document.getElementById("tabRanking").classList.toggle("on",tab==="ranking");
   document.getElementById("tabLikes").classList.toggle("on",tab==="likes");
+  document.getElementById("tabManyo").classList.toggle("on",tab==="manyo");
   rankEl.style.display=tab==="ranking"?"block":"none";
   likeEl.style.display=tab==="likes"?"block":"none";
+  manyoEl.style.display=tab==="manyo"?"block":"none";
   if(tab==="likes"&&!brandLoaded){
     brandLoaded=true;
     loadBrandData();
   }
+  if(tab==="manyo"&&!manyoLoaded){
+    manyoLoaded=true;
+    loadManyoData();
+  }
+}
+
+// ══════════════════════════════════════════
+//  마녀공장 탭
+// ══════════════════════════════════════════
+const MANYO_COLORS=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
+let manyoSelList=[], manyoChart=null;
+
+function loadManyoData(){
+  // 이미 로드된 allData (랭킹 데이터)에서 마녀공장 제품만 추출
+  // allData가 아직 없으면 기다림
+  if(!allData.length){
+    setTimeout(loadManyoData, 1000);
+    return;
+  }
+  renderManyoList();
+}
+
+function getManyoProducts(){
+  // 전체 스냅샷에서 마녀공장 제품 유니크 목록 (최신 데이터 기준)
+  // 데일리 기준: 하루에 하나만 → 이미 수집된 데이터 활용
+  if(!allData.length) return [];
+  const latest=allData[allData.length-1];
+  const prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
+  // 같은 제품이 여러 카테고리에 있을 수 있으므로 name+category로 유니크
+  const seen=new Set();
+  const unique=[];
+  prods.forEach(p=>{
+    const key=p.name+'||'+p.category;
+    if(!seen.has(key)){seen.add(key);unique.push(p);}
+  });
+  unique.sort((a,b)=>(a.rank||999)-(b.rank||999));
+  return unique;
+}
+
+function renderManyoList(){
+  const el=document.getElementById("manyoList");
+  const prods=getManyoProducts();
+
+  if(allData.length)document.getElementById("manyoUpdateTime").textContent=`최신: ${fmtFull(allData[allData.length-1].updated_at)}`;
+  document.getElementById("manyoCnt").textContent=`(${prods.length})`;
+
+  if(!prods.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">마녀공장 제품이 랭킹에 없습니다</div>';return}
+
+  el.innerHTML=prods.map((p,i)=>{
+    const isSel=manyoSelList.find(s=>matchProd(s,p));
+    const si=manyoSelList.findIndex(s=>matchProd(s,p));
+    const hue=((p.category||"").charCodeAt(0)*47)%360;
+    const priceStr=p.price?`${p.price}원`:'';
+    return `<div class="ri ${isSel?'on':''}" onclick="selManyo(${i})" style="gap:6px">
+      <div class="rn">${p.rank||'-'}</div>
+      ${isSel?`<span style="color:${MANYO_COLORS[si%5]};font-size:9px">●</span>`:''}
+      <div class="rname">${trunc(p.name,24)}</div>
+      <div class="rprice">${priceStr}</div>
+      <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%);font-size:9px">${p.category}</div>
+    </div>`;
+  }).join("");
+  el._p=prods;
+}
+
+function selManyo(i){
+  const prods=document.getElementById("manyoList")._p;
+  if(!prods||!prods[i])return;
+  const prod=prods[i];
+  const x=manyoSelList.findIndex(s=>matchProd(s,prod));
+  if(x>=0)manyoSelList.splice(x,1);
+  else if(manyoSelList.length<5)manyoSelList.push(prod);
+  renderManyoList();
+  updateManyoChart();
+}
+
+function updateManyoChart(){
+  const cv=document.getElementById("manyoCv");
+  const ee=document.getElementById("manyoChE");
+  const sub=document.getElementById("manyoChSub");
+
+  if(!manyoSelList.length){
+    ee.style.display="flex";cv.style.display="none";
+    sub.textContent="왼쪽에서 제품을 선택하세요 (최대 5개)";
+    if(manyoChart){manyoChart.destroy();manyoChart=null}
+    return;
+  }
+  ee.style.display="none";cv.style.display="block";
+
+  // 데일리 기준: allData에서 하루에 첫 번째 스냅샷만 사용
+  const dailyData=[];
+  const seenDates=new Set();
+  allData.forEach(snap=>{
+    const d=kstDate(snap.updated_at);
+    if(!seenDates.has(d)){seenDates.add(d);dailyData.push(snap);}
+  });
+
+  const labels=dailyData.map(d=>{const k=kst(d.updated_at);return`${k.getMonth()+1}/${k.getDate()}`});
+
+  const ds=[];
+  manyoSelList.forEach((p,i)=>{
+    const rankData=dailyData.map(snap=>{
+      const f=findProd(snap.products||[],p);
+      return f?(f.rank||null):null;
+    });
+    // ghost (순위권 밖 = 105)
+    const ghostData=rankData.map(v=>v!==null?v:105);
+    // 점선
+    ds.push({label:'_mg_'+i,data:ghostData,borderColor:MANYO_COLORS[i%5]+'55',borderDash:[4,3],borderWidth:1.5,pointRadius:0,tension:.3,fill:false,spanGaps:true,order:10+i});
+    // 실선
+    ds.push({label:trunc(p.name,20)+' ('+p.category+')',data:rankData,borderColor:MANYO_COLORS[i%5],backgroundColor:MANYO_COLORS[i%5]+"10",borderWidth:2.5,pointRadius:4,pointBackgroundColor:MANYO_COLORS[i%5],pointBorderColor:"#fff",pointBorderWidth:2,tension:.3,spanGaps:false,order:i});
+  });
+
+  sub.textContent=manyoSelList.map(p=>`${trunc(p.name,15)}(${p.category} ${p.rank}위)`).join(' · ');
+
+  if(manyoChart)manyoChart.destroy();
+  manyoChart=new Chart(cv,{type:"line",data:{labels,datasets:ds},options:{
+    responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+    plugins:{
+      legend:{display:true,position:"top",labels:{font:{size:10,family:"'Noto Sans KR'"},filter:item=>!item.text.startsWith('_mg_')}},
+      tooltip:{
+        backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:12,
+        titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
+        filter:item=>!item.dataset.label.startsWith('_mg_'),
+        callbacks:{
+          title:items=>{if(!items.length)return'';const idx=items[0].dataIndex;const snap=dailyData[idx];return snap?fmtFull(snap.updated_at):'';},
+          label:ctx=>{
+            const rank=ctx.parsed.y;
+            const idx=ctx.dataIndex;
+            const snap=dailyData[idx];
+            const pi=manyoSelList.findIndex(p=>ctx.dataset.label.includes(trunc(p.name,20)));
+            if(pi>=0&&snap){
+              const f=findProd(snap.products||[],manyoSelList[pi]);
+              const price=f&&f.price?` · ${f.price}원`:'';
+              return `${ctx.dataset.label}: ${rank>100?'순위권 밖':rank+'위'}${price}`;
+            }
+            return `${ctx.dataset.label}: ${rank>100?'순위권 밖':rank+'위'}`;
+          }
+        }
+      }
+    },
+    scales:{
+      y:{reverse:true,min:-1,max:110,
+        afterFit:function(axis){axis.paddingTop=30;},
+        ticks:{callback:v=>v<=0?'':v>100?'순위권 밖':v+"위",font:{size:11},color:"rgba(21,21,21,.3)",includeBounds:true,autoSkip:false},
+        afterBuildTicks:function(axis){
+          const ticks=axis.ticks.map(t=>t.value);
+          if(!ticks.includes(1)){axis.ticks.unshift({value:1});axis.ticks.sort((a,b)=>a.value-b.value);}
+        },
+        grid:{color:ctx=>{const v=ctx.tick.value;if(v<=0||v>100)return'transparent';if(v===1)return'rgba(21,21,21,.12)';return"rgba(21,21,21,.04)";}}
+      },
+      x:{ticks:{font:{size:11},color:"rgba(21,21,21,.3)"},grid:{display:false}}
+    }
+  }});
 }
 </script>
 </body>
