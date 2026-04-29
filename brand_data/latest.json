@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T10:50:07.654163+09:00",
+  "updated_at": "2026-04-29T11:05:57.619408+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 30,
   "brands": [
@@ -12,19 +12,19 @@
     {
       "brand": "토리든",
       "code": "A001491",
-      "likes": 27158,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001491"
     },
     {
       "brand": "라운드랩",
       "code": "A001556",
-      "likes": 27158,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001556"
     },
     {
       "brand": "넘버즈인",
       "code": "A001687",
-      "likes": 27158,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001687"
     },
     {
@@ -48,19 +48,19 @@
     {
       "brand": "달바",
       "code": "A001374",
-      "likes": 26,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001374"
     },
     {
       "brand": "조선미녀",
       "code": "A001684",
-      "likes": 26,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001684"
     },
     {
       "brand": "에스트라",
       "code": "A000606",
-      "likes": 26,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000606"
     },
     {
@@ -72,7 +72,7 @@
     {
       "brand": "닥터지",
       "code": "A000441",
-      "likes": 132,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000441"
     },
     {
@@ -144,7 +144,7 @@
     {
       "brand": "센카",
       "code": "A001289",
-      "likes": 719,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001289"
     },
     {
@@ -162,13 +162,13 @@
     {
       "brand": "아비브",
       "code": "A001397",
-      "likes": 93,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001397"
     },
     {
       "brand": "CNP",
       "code": "A000667",
-      "likes": 93,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000667"
     },
     {
