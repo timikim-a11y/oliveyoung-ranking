@@ -1,0 +1,187 @@
+{
+  "updated_at": "2026-04-29T10:50:07.654163+09:00",
+  "source": "oliveyoung.co.kr",
+  "total_brands": 30,
+  "brands": [
+    {
+      "brand": "마녀공장",
+      "code": "A001924",
+      "likes": 27158,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
+    },
+    {
+      "brand": "토리든",
+      "code": "A001491",
+      "likes": 27158,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001491"
+    },
+    {
+      "brand": "라운드랩",
+      "code": "A001556",
+      "likes": 27158,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001556"
+    },
+    {
+      "brand": "넘버즈인",
+      "code": "A001687",
+      "likes": 27158,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001687"
+    },
+    {
+      "brand": "아누아",
+      "code": "A001633",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001633"
+    },
+    {
+      "brand": "롬앤",
+      "code": "A001420",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001420"
+    },
+    {
+      "brand": "클리오",
+      "code": "A000246",
+      "likes": 26,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000246"
+    },
+    {
+      "brand": "달바",
+      "code": "A001374",
+      "likes": 26,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001374"
+    },
+    {
+      "brand": "조선미녀",
+      "code": "A001684",
+      "likes": 26,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001684"
+    },
+    {
+      "brand": "에스트라",
+      "code": "A000606",
+      "likes": 26,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000606"
+    },
+    {
+      "brand": "코스알엑스",
+      "code": "A000840",
+      "likes": 132,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000840"
+    },
+    {
+      "brand": "닥터지",
+      "code": "A000441",
+      "likes": 132,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000441"
+    },
+    {
+      "brand": "메디힐",
+      "code": "A000651",
+      "likes": 51,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000651"
+    },
+    {
+      "brand": "VT",
+      "code": "A000939",
+      "likes": 2290,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000939"
+    },
+    {
+      "brand": "이니스프리",
+      "code": "A000052",
+      "likes": 231,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000052"
+    },
+    {
+      "brand": "라네즈",
+      "code": "A000031",
+      "likes": 4486,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000031"
+    },
+    {
+      "brand": "바닐라코",
+      "code": "A000273",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000273"
+    },
+    {
+      "brand": "스킨푸드",
+      "code": "A000107",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000107"
+    },
+    {
+      "brand": "페리페라",
+      "code": "A001002",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001002"
+    },
+    {
+      "brand": "아이소이",
+      "code": "A000508",
+      "likes": null,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000508"
+    },
+    {
+      "brand": "미샤",
+      "code": "A000077",
+      "likes": 213,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000077"
+    },
+    {
+      "brand": "헤라",
+      "code": "A000017",
+      "likes": 519,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000017"
+    },
+    {
+      "brand": "비플레인",
+      "code": "A001594",
+      "likes": 719,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001594"
+    },
+    {
+      "brand": "센카",
+      "code": "A001289",
+      "likes": 719,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001289"
+    },
+    {
+      "brand": "구달",
+      "code": "A001179",
+      "likes": 29,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001179"
+    },
+    {
+      "brand": "ONE THING",
+      "code": "A001685",
+      "likes": 93,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001685"
+    },
+    {
+      "brand": "아비브",
+      "code": "A001397",
+      "likes": 93,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001397"
+    },
+    {
+      "brand": "CNP",
+      "code": "A000667",
+      "likes": 93,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000667"
+    },
+    {
+      "brand": "셀퓨전씨",
+      "code": "A000887",
+      "likes": 5543,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000887"
+    },
+    {
+      "brand": "불랑네이처",
+      "code": "A001869",
+      "likes": 3,
+      "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001869"
+    }
+  ]
+}
