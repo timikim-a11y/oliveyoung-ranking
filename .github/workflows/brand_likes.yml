@@ -1,0 +1,46 @@
+name: 브랜드 좋아요 수집
+
+on:
+  schedule:
+    # 매일 오전 9시 KST (= UTC 0시)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: brand-likes
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Seoul
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Playwright 설치
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps
+
+      - name: 브랜드 좋아요 크롤링
+        run: python brand_likes_scraper.py
+
+      - name: 데이터 저장 (자동 커밋)
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add brand_data/
+          git diff --staged --quiet || git commit -m "❤️ 브랜드 좋아요 업데이트 $(date +'%Y-%m-%d %H:%M KST')"
+          git push
