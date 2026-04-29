@@ -854,7 +854,7 @@ function myApplyFilter(){
 }
 
 // ── 카테고리 필터 (자동 감지) ──
-// "전체(취합)": 모든 카테고리의 마녀공장 제품 합산
+// "TOTAL": 모든 카테고리의 마녀공장 제품 합산
 // "전체랭킹": 랭킹 트래커의 "전체" 카테고리에서만
 // 나머지: 각 개별 카테고리
 function myGetCats(){
@@ -868,7 +868,7 @@ function myGetCats(){
   // "전체"가 있으면 개별 카테고리 목록에서 제거하고 "전체랭킹"으로 별도 배치
   const hasTotal=sorted.includes("전체");
   const others=sorted.filter(c=>c!=="전체");
-  const result=["전체(취합)"];
+  const result=["TOTAL"];
   if(hasTotal)result.push("전체랭킹");
   result.push(...others);
   return result;
@@ -878,7 +878,7 @@ function myRenderCats(){
   document.getElementById("myCatGrid").innerHTML=cats.map(c=>
     `<button class="cat-btn ${c===myCat?'on':''}" onclick="mySetCat('${c}')">${c}</button>`
   ).join("");
-  if(!cats.includes(myCat))myCat="전체(취합)";
+  if(!cats.includes(myCat))myCat="TOTAL";
 }
 function mySetCat(c){myCat=c;myRenderCats();myRender();}
 
@@ -906,7 +906,7 @@ function getManyoProducts(){
   const latest=myFilteredData[myFilteredData.length-1];
   let prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
   // 카테고리 필터
-  if(myCat==="전체(취합)"){/* 전체 취합 - 필터 안 함 */}
+  if(myCat==="TOTAL"){/* 전체 취합 - 필터 안 함 */}
   else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
   else{prods=prods.filter(p=>p.category===myCat);}
   const seen=new Set();const unique=[];
@@ -1025,7 +1025,7 @@ function myRenderTable(){
     const dateStr=`${k.getFullYear()}.${k.getMonth()+1}.${k.getDate()}`;
     const timeStr=`${S(k.getHours())}:${S(k.getMinutes())}`;
     let prods=(snap.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
-    if(myCat==="전체(취합)"){/* no filter */}
+    if(myCat==="TOTAL"){/* no filter */}
     else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
     else{prods=prods.filter(p=>p.category===myCat);}
     prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
