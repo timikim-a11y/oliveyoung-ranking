@@ -14,7 +14,6 @@ KST = timezone(timedelta(hours=9))
 
 # ══════════════════════════════════════════════
 #  트래킹할 브랜드 목록
-#  브랜드 추가/삭제는 여기서만 하면 됩니다
 #  ("브랜드명", "올리브영 브랜드코드")
 # ══════════════════════════════════════════════
 BRANDS = [
@@ -55,66 +54,58 @@ def build_brand_url(brand_code):
     return f"https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd={brand_code}"
 
 
-def extract_like_count(page):
-    """페이지에서 좋아요 수 추출"""
-    # 여러 패턴 시도
-    # 패턴 1: "27,159명이 XX을 좋아합니다" 텍스트에서 숫자 추출
-    try:
-        content = page.content()
-        # "N명이" 패턴
-        m = re.search(r'([\d,]+)\s*명이.*좋아합니다', content)
-        if m:
-            return int(m.group(1).replace(",", ""))
-    except:
-        pass
-
-    # 패턴 2: 좋아요 관련 셀렉터
-    for sel in [
-        ".brand_like_num",
-        "[class*='like'] [class*='num']",
-        "[class*='like'] span",
-        ".like_count",
-        "[class*='wish'] [class*='num']",
-    ]:
-        el = page.query_selector(sel)
-        if el:
-            text = el.inner_text().strip()
-            nums = re.findall(r'[\d,]+', text)
-            if nums:
-                return int(nums[0].replace(",", ""))
-
-    # 패턴 3: 페이지 전체 텍스트에서 "N명이" 패턴
-    try:
-        body_text = page.inner_text("body")
-        m = re.search(r'([\d,]+)\s*명이', body_text)
-        if m:
-            return int(m.group(1).replace(",", ""))
-    except:
-        pass
-
-    return None
-
-
 def scrape_brand_likes():
-    """모든 브랜드의 좋아요 수 크롤링"""
+    """모든 브랜드의 좋아요 수 크롤링 — 매 브랜드마다 새 페이지"""
     results = []
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-            locale="ko-KR",
-            viewport={"width": 1920, "height": 1080},
-        )
-        page = context.new_page()
 
         for brand_name, brand_code in BRANDS:
+            like_count = None
             try:
+                # ★ 핵심: 매 브랜드마다 새 컨텍스트+페이지 열기
+                # 이전 페이지 DOM이 남아있는 문제 방지
+                context = browser.new_context(
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+                    locale="ko-KR",
+                    viewport={"width": 1920, "height": 1080},
+                )
+                page = context.new_page()
+
                 url = build_brand_url(brand_code)
                 page.goto(url, wait_until="networkidle", timeout=30000)
-                page.wait_for_timeout(3000)
+                page.wait_for_timeout(4000)
 
-                like_count = extract_like_count(page)
+                # 방법 1: "N명이 XX을(를) 좋아합니다" 텍스트에서 추출
+                body_text = page.inner_text("body")
+
+                # "27,158명이 마녀공장을 좋아합니다" 패턴
+                pattern = r'([\d,]+)\s*명이\s*.+?좋아합니다'
+                matches = re.findall(pattern, body_text)
+                if matches:
+                    # 가장 첫번째 매치 사용
+                    like_count = int(matches[0].replace(",", ""))
+
+                # 방법 2: 못 찾으면 "N명이" 패턴만으로
+                if like_count is None:
+                    m = re.search(r'([\d,]+)\s*명이', body_text)
+                    if m:
+                        num = int(m.group(1).replace(",", ""))
+                        # 너무 작은 숫자(1~10)는 다른 텍스트일 가능성
+                        if num > 10:
+                            like_count = num
+
+                # 방법 3: HTML 소스에서 직접 추출
+                if like_count is None:
+                    html = page.content()
+                    m = re.search(r'([\d,]+)\s*명이.*?좋아합니다', html)
+                    if m:
+                        like_count = int(m.group(1).replace(",", ""))
+
+                # 페이지 닫기 (메모리 정리)
+                page.close()
+                context.close()
 
                 result = {
                     "brand": brand_name,
@@ -137,6 +128,11 @@ def scrape_brand_likes():
                     "likes": None,
                     "url": build_brand_url(brand_code),
                 })
+                try:
+                    page.close()
+                    context.close()
+                except:
+                    pass
 
         browser.close()
 
@@ -160,7 +156,6 @@ def save_results(data):
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    # latest도 저장
     latest_path = os.path.join("brand_data", "latest.json")
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
@@ -168,13 +163,19 @@ def save_results(data):
     print(f"\n📁 저장: {filepath} ({len(data)}개 브랜드)")
     print(f"📁 최신: {latest_path}")
 
-    # 통계
     valid = [d for d in data if d["likes"] is not None]
+    failed = [d for d in data if d["likes"] is None]
+
     if valid:
         top = sorted(valid, key=lambda x: x["likes"], reverse=True)[:5]
         print("\n🏆 좋아요 TOP 5:")
         for i, b in enumerate(top, 1):
             print(f"   {i}. {b['brand']}: {b['likes']:,}명")
+
+    if failed:
+        print(f"\n⚠️ 수집 실패 브랜드 ({len(failed)}개):")
+        for b in failed:
+            print(f"   - {b['brand']} ({b['code']})")
 
 
 if __name__ == "__main__":
