@@ -241,25 +241,47 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 <div id="likesTab" style="display:none">
   <div class="pf">
     <div class="pf-label">❤️ 브랜드 좋아요 추이</div>
+    <div style="display:flex;gap:4px;margin-left:12px">
+      <button class="pf-btn on" id="blViewChart" onclick="blSetView('chart')">📈 차트</button>
+      <button class="pf-btn" id="blViewTable" onclick="blSetView('table')">📋 테이블</button>
+    </div>
     <div style="margin-left:auto;font-size:11px;color:var(--oy-bk5)" id="brandUpdateTime"></div>
   </div>
   <div class="ndb" id="brandNdb" style="display:none">
     <span style="font-size:15px">⚠️</span>
     <div><strong>아직 수집된 데이터가 없습니다.</strong><br>GitHub Actions에서 "브랜드 좋아요 수집" workflow를 실행해주세요.</div>
   </div>
-  <div class="main">
-    <div class="pl">
-      <div class="pl-hd">❤️ 브랜드 좋아요 랭킹</div>
-      <div class="rl" id="brandList"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
-    </div>
-    <div class="pr">
-      <div class="ch-hd">
-        <div class="ch-title">브랜드 좋아요 추이</div>
-        <div class="ch-sub" id="brandChSub">왼쪽에서 브랜드를 선택하세요 (최대 8개)</div>
+  <!-- 차트 뷰 -->
+  <div id="blChartView">
+    <div class="main">
+      <div class="pl">
+        <div class="pl-hd">❤️ 브랜드 좋아요 랭킹</div>
+        <div class="rl" id="brandList"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
       </div>
-      <div class="ch-area">
-        <canvas id="brandCv"></canvas>
-        <div class="ch-empty" id="brandChE"><span class="ic">❤️</span>왼쪽에서 브랜드를 선택하세요</div>
+      <div class="pr">
+        <div class="ch-hd">
+          <div class="ch-title">브랜드 좋아요 추이</div>
+          <div class="ch-sub" id="brandChSub">마녀공장이 기본 선택되어 있습니다</div>
+        </div>
+        <div class="ch-area">
+          <canvas id="brandCv"></canvas>
+          <div class="ch-empty" id="brandChE" style="display:none"><span class="ic">❤️</span>왼쪽에서 브랜드를 선택하세요</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 테이블 뷰 -->
+  <div id="blTableView" style="display:none;padding:14px 32px 40px">
+    <div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:12px;font-weight:600">브랜드 필터:</span>
+      <div id="blBrandFilter" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="overflow-x:auto;max-height:600px;overflow-y:auto">
+        <table id="blTable" class="my-tbl" style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead style="position:sticky;top:0;z-index:1"><tr><th>일자</th><th>브랜드명</th><th>좋아요 수</th><th>전일 대비</th></tr></thead>
+          <tbody id="blTbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -571,6 +593,7 @@ function toggleCmp(){cmpMode=!cmpMode;cmpList=[];document.getElementById("cmpTog
 let brandAllData=[], brandSelList=[];
 const BRAND_COLORS=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
 let brandChart=null;
+let blView="chart", blTableBrand="all";
 
 async function loadBrandData(){
   const api=`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/brand_data`;
@@ -585,14 +608,17 @@ async function loadBrandData(){
       const res=await Promise.allSettled(batch.map(f=>fetch(f.download_url).then(r=>r.json())));
       res.forEach(r=>{if(r.status==="fulfilled")brandAllData.push(r.value)});
     }
+    // ★ 마녀공장 자동 선택
+    autoSelectManyo();
     renderBrandList();
+    updateBrandChart();
     document.getElementById("brandNdb").style.display="none";
   }catch{
-    // fallback: latest
     try{
       const r=await fetch(`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/brand_data/latest.json`);
       if(!r.ok)throw 0;
-      const d=await r.json();brandAllData=[d];renderBrandList();
+      const d=await r.json();brandAllData=[d];
+      autoSelectManyo();renderBrandList();updateBrandChart();
       document.getElementById("brandNdb").style.display="none";
     }catch{
       document.getElementById("brandNdb").style.display="flex";
@@ -601,16 +627,22 @@ async function loadBrandData(){
   }
 }
 
+function autoSelectManyo(){
+  if(!brandAllData.length)return;
+  const latest=brandAllData[brandAllData.length-1];
+  const manyo=(latest.brands||[]).find(b=>b.brand==="마녀공장");
+  if(manyo&&!brandSelList.find(s=>s.code===manyo.code)){
+    brandSelList.push(manyo);
+  }
+}
+
 function renderBrandList(){
   const el=document.getElementById("brandList");
   if(!brandAllData.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';return}
   const latest=brandAllData[brandAllData.length-1];
   const brands=(latest.brands||[]).filter(b=>b.likes!==null).sort((a,b)=>b.likes-a.likes);
-
-  // 업데이트 시간
   document.getElementById("brandUpdateTime").textContent=`마지막 수집: ${fmtFull(latest.updated_at)}`;
 
-  // 이전 데이터로 변화량 계산
   let prevMap={};
   if(brandAllData.length>=2){
     const prev=brandAllData[brandAllData.length-2];
@@ -629,7 +661,6 @@ function renderBrandList(){
       else changeHtml=`<span style="color:var(--oy-bk3);font-size:10px">-</span>`;
     }
     const isManyo=b.brand==="마녀공장";
-    const hue=((b.brand||"").charCodeAt(0)*37)%360;
     return `<div class="ri ${isSel?'on':''}" onclick="selBrand(${i})" style="gap:8px;${isManyo?'background:var(--oy-yellow-soft);border-left:3px solid var(--oy-black);':''}">
       <div class="rn" ${isManyo?'style="color:var(--oy-black);font-size:15px"':''}>${i+1}</div>
       ${changeHtml}
@@ -649,76 +680,107 @@ function selBrand(i){
   const x=brandSelList.findIndex(s=>s.code===b.code);
   if(x>=0)brandSelList.splice(x,1);
   else if(brandSelList.length<8)brandSelList.push(b);
-  renderBrandList();
-  updateBrandChart();
+  renderBrandList();updateBrandChart();
 }
 
 function updateBrandChart(){
   const cv=document.getElementById("brandCv");
   const ee=document.getElementById("brandChE");
   const sub=document.getElementById("brandChSub");
-
   if(!brandSelList.length){
     ee.style.display="flex";cv.style.display="none";
     sub.textContent="왼쪽에서 브랜드를 선택하세요 (최대 8개)";
-    if(brandChart){brandChart.destroy();brandChart=null}
-    return;
+    if(brandChart){brandChart.destroy();brandChart=null}return;
   }
   ee.style.display="none";cv.style.display="block";
-
-  const labels=brandAllData.map(d=>{
-    const k=kst(d.updated_at);
-    return `${k.getMonth()+1}/${k.getDate()}`;
-  });
-
+  const labels=brandAllData.map(d=>{const k=kst(d.updated_at);return`${k.getMonth()+1}/${k.getDate()}`});
   const ds=brandSelList.map((b,i)=>{
-    const data=brandAllData.map(snap=>{
-      const found=(snap.brands||[]).find(br=>br.code===b.code);
-      return found&&found.likes!==null?found.likes:null;
-    });
-    return{
-      label:b.brand,
-      data,
-      borderColor:BRAND_COLORS[i%BRAND_COLORS.length],
-      backgroundColor:BRAND_COLORS[i%BRAND_COLORS.length]+"15",
-      borderWidth:2.5,
-      pointRadius:5,
-      pointBackgroundColor:BRAND_COLORS[i%BRAND_COLORS.length],
-      pointBorderColor:"#fff",
-      pointBorderWidth:2,
-      tension:.3,
-      spanGaps:true,
-      fill:false,
-    };
+    const data=brandAllData.map(snap=>{const found=(snap.brands||[]).find(br=>br.code===b.code);return found&&found.likes!==null?found.likes:null;});
+    return{label:b.brand,data,borderColor:BRAND_COLORS[i%BRAND_COLORS.length],backgroundColor:BRAND_COLORS[i%BRAND_COLORS.length]+"15",borderWidth:2.5,pointRadius:5,pointBackgroundColor:BRAND_COLORS[i%BRAND_COLORS.length],pointBorderColor:"#fff",pointBorderWidth:2,tension:.3,spanGaps:true,fill:false};
   });
-
   sub.textContent=brandSelList.map(b=>`${b.brand}(${b.likes?.toLocaleString()}명)`).join(' · ');
-
   if(brandChart)brandChart.destroy();
   brandChart=new Chart(cv,{type:"line",data:{labels,datasets:ds},options:{
     responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
     plugins:{
       legend:{display:true,position:"top",labels:{font:{size:11,family:"'Noto Sans KR'"}}},
-      tooltip:{
-        backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:12,
+      tooltip:{backgroundColor:"#fff",titleColor:"#151515",bodyColor:"#666",borderColor:"#e5e7eb",borderWidth:1,padding:12,
         titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
-        callbacks:{
-          title:items=>{
-            if(!items.length)return'';
-            const idx=items[0].dataIndex;
-            const snap=brandAllData[idx];
-            if(!snap)return items[0].label;
-            return fmtFull(snap.updated_at);
-          },
-          label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y?.toLocaleString()}명`,
-        }
-      }
+        callbacks:{title:items=>{if(!items.length)return'';const snap=brandAllData[items[0].dataIndex];return snap?fmtFull(snap.updated_at):'';},label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y?.toLocaleString()}명`}}
     },
     scales:{
       y:{ticks:{callback:v=>v>=1000?(v/1000).toFixed(v%1000===0?0:1)+'K':v,font:{size:11},color:"rgba(21,21,21,.3)"},grid:{color:"rgba(21,21,21,.04)"}},
       x:{ticks:{font:{size:11},color:"rgba(21,21,21,.3)"},grid:{display:false}}
     }
   }});
+}
+
+// ── 브랜드 좋아요 뷰 전환 ──
+function blSetView(v){
+  blView=v;
+  document.getElementById("blViewChart").classList.toggle("on",v==="chart");
+  document.getElementById("blViewTable").classList.toggle("on",v==="table");
+  document.getElementById("blChartView").style.display=v==="chart"?"block":"none";
+  document.getElementById("blTableView").style.display=v==="table"?"block":"none";
+  if(v==="table")blRenderTable();
+}
+
+// ── 브랜드 좋아요 테이블 ──
+function blRenderTable(){
+  // 브랜드 필터 버튼
+  const allBrands=new Set();
+  brandAllData.forEach(snap=>{(snap.brands||[]).forEach(b=>{if(b.likes!==null)allBrands.add(b.brand)})});
+  const sortedBrands=[...allBrands].sort();
+
+  const filterEl=document.getElementById("blBrandFilter");
+  filterEl.innerHTML=`<button class="pf-btn ${blTableBrand==='all'?'on':''}" onclick="blSetBrandFilter('all')" style="font-size:11px;padding:4px 10px">전체</button>`+
+    sortedBrands.map(br=>{
+      const isManyo=br==="마녀공장";
+      return `<button class="pf-btn ${blTableBrand===br?'on':''}" onclick="blSetBrandFilter('${br}')" style="font-size:11px;padding:4px 10px;${isManyo?'font-weight:700':''}">${isManyo?'🧙‍♀️ ':''}${br}</button>`;
+    }).join('');
+
+  // 테이블 데이터
+  const tbody=document.getElementById("blTbody");
+  const rows=[];
+
+  brandAllData.forEach((snap,si)=>{
+    const k=kst(snap.updated_at);
+    const dateStr=`${k.getFullYear()}.${k.getMonth()+1}.${k.getDate()}`;
+    let brands=(snap.brands||[]).filter(b=>b.likes!==null);
+    if(blTableBrand!=="all")brands=brands.filter(b=>b.brand===blTableBrand);
+    brands.sort((a,b)=>b.likes-a.likes);
+
+    // 전일 대비
+    const prevSnap=si>0?brandAllData[si-1]:null;
+    const prevMap={};
+    if(prevSnap)(prevSnap.brands||[]).forEach(b=>{if(b.likes!==null)prevMap[b.code]=b.likes});
+
+    brands.forEach(b=>{
+      const isManyo=b.brand==="마녀공장";
+      const prev=prevMap[b.code];
+      let diffHtml='-';
+      if(prev!==undefined){
+        const diff=b.likes-prev;
+        if(diff>0)diffHtml=`<span style="color:#ef4444;font-weight:600">+${diff.toLocaleString()}</span>`;
+        else if(diff<0)diffHtml=`<span style="color:#3b82f6;font-weight:600">${diff.toLocaleString()}</span>`;
+        else diffHtml=`<span style="color:var(--oy-bk3)">0</span>`;
+      }
+      rows.push(`<tr style="${isManyo?'background:var(--oy-yellow-soft);font-weight:600':''}">
+        <td>${dateStr}</td>
+        <td>${isManyo?'🧙‍♀️ ':''}${b.brand}</td>
+        <td style="font-family:'Outfit',sans-serif;font-weight:600">${b.likes.toLocaleString()}</td>
+        <td>${diffHtml}</td>
+      </tr>`);
+    });
+  });
+
+  // 최신이 위로 오게 역순
+  tbody.innerHTML=rows.length?rows.reverse().join(''):'<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--oy-bk3)">데이터가 없습니다</td></tr>';
+}
+
+function blSetBrandFilter(br){
+  blTableBrand=br;
+  blRenderTable();
 }
 
 // ── 탭 전환 ──
@@ -792,23 +854,31 @@ function myApplyFilter(){
 }
 
 // ── 카테고리 필터 (자동 감지) ──
+// "전체(취합)": 모든 카테고리의 마녀공장 제품 합산
+// "전체랭킹": 랭킹 트래커의 "전체" 카테고리에서만
+// 나머지: 각 개별 카테고리
 function myGetCats(){
-  // myFilteredData에서 마녀공장 제품이 속한 카테고리만 추출
   const cats=new Set();
   myFilteredData.forEach(snap=>{
     (snap.products||[]).forEach(p=>{
       if((p.brand||"").includes("마녀공장"))cats.add(p.category);
     });
   });
-  return ["전체",...[...cats].sort()];
+  const sorted=[...cats].sort();
+  // "전체"가 있으면 개별 카테고리 목록에서 제거하고 "전체랭킹"으로 별도 배치
+  const hasTotal=sorted.includes("전체");
+  const others=sorted.filter(c=>c!=="전체");
+  const result=["전체(취합)"];
+  if(hasTotal)result.push("전체랭킹");
+  result.push(...others);
+  return result;
 }
 function myRenderCats(){
   const cats=myGetCats();
   document.getElementById("myCatGrid").innerHTML=cats.map(c=>
     `<button class="cat-btn ${c===myCat?'on':''}" onclick="mySetCat('${c}')">${c}</button>`
   ).join("");
-  // 현재 선택 카테고리가 목록에 없으면 전체로
-  if(!cats.includes(myCat))myCat="전체";
+  if(!cats.includes(myCat))myCat="전체(취합)";
 }
 function mySetCat(c){myCat=c;myRenderCats();myRender();}
 
@@ -835,7 +905,10 @@ function getManyoProducts(){
   if(!myFilteredData.length)return[];
   const latest=myFilteredData[myFilteredData.length-1];
   let prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
-  if(myCat!=="전체")prods=prods.filter(p=>p.category===myCat);
+  // 카테고리 필터
+  if(myCat==="전체(취합)"){/* 전체 취합 - 필터 안 함 */}
+  else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
+  else{prods=prods.filter(p=>p.category===myCat);}
   const seen=new Set();const unique=[];
   prods.forEach(p=>{const key=p.name+'||'+p.category;if(!seen.has(key)){seen.add(key);unique.push(p);}});
   unique.sort((a,b)=>(a.rank||999)-(b.rank||999));
@@ -952,7 +1025,9 @@ function myRenderTable(){
     const dateStr=`${k.getFullYear()}.${k.getMonth()+1}.${k.getDate()}`;
     const timeStr=`${S(k.getHours())}:${S(k.getMinutes())}`;
     let prods=(snap.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
-    if(myCat!=="전체")prods=prods.filter(p=>p.category===myCat);
+    if(myCat==="전체(취합)"){/* no filter */}
+    else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
+    else{prods=prods.filter(p=>p.category===myCat);}
     prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
     prods.forEach(p=>{
       const hue=((p.category||"").charCodeAt(0)*47)%360;
