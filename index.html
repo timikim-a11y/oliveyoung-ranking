@@ -756,12 +756,17 @@ function renderManyoList(){
     const si=manyoSelList.findIndex(s=>matchProd(s,p));
     const hue=((p.category||"").charCodeAt(0)*47)%360;
     const priceStr=p.price?`${p.price}원`:'';
-    return `<div class="ri ${isSel?'on':''}" onclick="selManyo(${i})" style="gap:6px">
-      <div class="rn">${p.rank||'-'}</div>
-      ${isSel?`<span style="color:${MANYO_COLORS[si%5]};font-size:9px">●</span>`:''}
-      <div class="rname">${trunc(p.name,24)}</div>
-      <div class="rprice">${priceStr}</div>
-      <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%);font-size:9px">${p.category}</div>
+    return `<div class="ri ${isSel?'on':''}" onclick="selManyo(${i})" style="gap:6px;padding:10px 14px;align-items:flex-start">
+      <div class="rn" style="margin-top:2px">${p.rank||'-'}</div>
+      ${isSel?`<span style="color:${MANYO_COLORS[si%5]};font-size:9px;margin-top:4px">●</span>`:''}
+      <div style="flex:1;min-width:0">
+        <div class="rname">${trunc(p.name,28)}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+          <div class="rbrand" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%);font-size:9px">${p.category}</div>
+          <span style="font-size:10px;color:var(--oy-bk5)">${p.category} ${p.rank||'-'}위</span>
+          <span style="font-size:10px;color:var(--oy-bk3)">${priceStr}</span>
+        </div>
+      </div>
     </div>`;
   }).join("");
   el._p=prods;
