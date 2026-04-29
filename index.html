@@ -24,6 +24,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 .main-tab:hover{color:var(--oy-black)}
 .main-tab.on{color:var(--oy-black);font-weight:700;border-bottom-color:var(--oy-black)}
 
+/* Table */
+.my-tbl th{padding:10px 14px;text-align:left;font-weight:600;font-size:11px;color:var(--oy-bk5);background:var(--oy-yellow-soft);border-bottom:2px solid var(--border);white-space:nowrap;position:sticky;top:0}
+.my-tbl td{padding:9px 14px;border-bottom:1px solid #f5f5f3;font-size:12px;white-space:nowrap}
+.my-tbl tr:hover td{background:#fafaf5}
+.my-tbl .rank-cell{font-family:'Outfit',sans-serif;font-weight:700;text-align:center}
+.my-tbl .cat-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;display:inline-block}
+
 .pf{background:var(--card);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pf-label{font-size:13px;font-weight:600;flex-shrink:0}
 .pf-btns{display:flex;gap:5px;flex-wrap:wrap}
@@ -172,31 +179,59 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 
 <!-- ═══ 마녀공장 탭 ═══ -->
 <div id="manyoTab" style="display:none">
+  <!-- 기간 필터 -->
   <div class="pf">
-    <div class="pf-label">🧙‍♀️ 마녀공장 제품별 카테고리 순위 추이</div>
-    <div style="margin-left:auto;font-size:11px;color:var(--oy-bk5)" id="manyoUpdateTime"></div>
-  </div>
-  <div class="main">
-    <div class="pl">
-      <div class="pl-hd">🧙‍♀️ 마녀공장 제품 <span class="cnt" id="manyoCnt"></span></div>
-      <div class="rl" id="manyoList"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
+    <div class="pf-label">📅 기간</div>
+    <div class="pf-btns" id="myPfBtns"></div>
+    <div class="dr">
+      <input type="date" id="myDFrom"><span>~</span><input type="date" id="myDTo">
+      <button onclick="myApplyRange()">적용</button>
     </div>
-    <div class="pr">
-      <div class="ch-hd">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between">
-          <div>
-            <div class="ch-title">마녀공장 제품별 순위 트렌드</div>
-            <div class="ch-sub" id="manyoChSub">왼쪽에서 제품을 선택하세요 (최대 5개)</div>
-          </div>
+  </div>
+  <!-- 카테고리 필터 (자동 감지) -->
+  <div class="cats">
+    <div class="cats-label">🏷 카테고리</div>
+    <div class="cats-grid" id="myCatGrid"></div>
+  </div>
+  <!-- 뷰 전환 -->
+  <div style="background:var(--card);border-bottom:1px solid var(--border);padding:8px 32px;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">🧙‍♀️ 마녀공장 제품 <span class="cnt" id="manyoCnt"></span></div>
+    <div style="display:flex;gap:4px">
+      <button class="pf-btn on" id="myViewChart" onclick="mySetView('chart')">📈 차트</button>
+      <button class="pf-btn" id="myViewTable" onclick="mySetView('table')">📋 테이블</button>
+    </div>
+  </div>
+  <!-- 차트 뷰 -->
+  <div id="myChartView">
+    <div class="main">
+      <div class="pl">
+        <div class="pl-hd">🧙‍♀️ 제품 목록 <span style="font-size:11px;color:var(--oy-bk5);font-weight:400;margin-left:auto" id="manyoUpdateTime"></span></div>
+        <div class="rl" id="manyoList"><div class="ld"><div class="sp"></div>로딩 중...</div></div>
+      </div>
+      <div class="pr">
+        <div class="ch-hd">
+          <div class="ch-title">마녀공장 제품별 순위 트렌드</div>
+          <div class="ch-sub" id="manyoChSub">왼쪽에서 제품을 선택하세요 (최대 5개)</div>
+        </div>
+        <div class="ch-legend">
+          <span class="lg-i"><span class="lg-l" style="background:var(--c-rank)"></span>순위권</span>
+          <span class="lg-i"><span class="lg-dash" style="border-color:var(--c-out)"></span>순위권 밖</span>
+        </div>
+        <div class="ch-area">
+          <canvas id="manyoCv"></canvas>
+          <div class="ch-empty" id="manyoChE"><span class="ic">🧙‍♀️</span>왼쪽에서 제품을 선택하세요</div>
         </div>
       </div>
-      <div class="ch-legend">
-        <span class="lg-i"><span class="lg-l" style="background:var(--c-rank)"></span>순위권</span>
-        <span class="lg-i"><span class="lg-dash" style="border-color:var(--c-out)"></span>순위권 밖</span>
-      </div>
-      <div class="ch-area">
-        <canvas id="manyoCv"></canvas>
-        <div class="ch-empty" id="manyoChE"><span class="ic">🧙‍♀️</span>왼쪽에서 제품을 선택하세요</div>
+    </div>
+  </div>
+  <!-- 테이블 뷰 -->
+  <div id="myTableView" style="display:none;padding:14px 32px 40px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="overflow-x:auto">
+        <table id="manyoTable" style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead><tr id="myThead"></tr></thead>
+          <tbody id="myTbody"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -714,43 +749,103 @@ function switchMainTab(tab){
 // ══════════════════════════════════════════
 const MANYO_COLORS=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
 let manyoSelList=[], manyoChart=null;
+let myPeriod="all", myCat="전체", myView="chart";
+let myFilteredData=[];
 
 function loadManyoData(){
-  // 이미 로드된 allData (랭킹 데이터)에서 마녀공장 제품만 추출
-  // allData가 아직 없으면 기다림
-  if(!allData.length){
-    setTimeout(loadManyoData, 1000);
-    return;
-  }
-  renderManyoList();
+  if(!allData.length){setTimeout(loadManyoData,1000);return}
+  // 날짜 기본값
+  const t=new Date(),ts=t.toISOString().split("T")[0];
+  const m=new Date(t);m.setMonth(m.getMonth()-1);
+  document.getElementById("myDTo").value=ts;
+  document.getElementById("myDFrom").value=m.toISOString().split("T")[0];
+  myApplyFilter();
 }
 
-function getManyoProducts(){
-  // 전체 스냅샷에서 마녀공장 제품 유니크 목록 (최신 데이터 기준)
-  // 데일리 기준: 하루에 하나만 → 이미 수집된 데이터 활용
-  if(!allData.length) return [];
-  const latest=allData[allData.length-1];
-  const prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
-  // 같은 제품이 여러 카테고리에 있을 수 있으므로 name+category로 유니크
-  const seen=new Set();
-  const unique=[];
-  prods.forEach(p=>{
-    const key=p.name+'||'+p.category;
-    if(!seen.has(key)){seen.add(key);unique.push(p);}
+// ── 기간 필터 ──
+function myRenderPeriod(){
+  const months=new Set();allData.forEach(d=>{if(d.updated_at)months.add(kstMonth(d.updated_at))});
+  const sorted=[...months].sort().reverse();
+  let h='';
+  [["all","전체"],["today","오늘"],["7d","7일"],["30d","30일"]].forEach(([k,l])=>{h+=`<button class="pf-btn ${myPeriod===k?'on':''}" onclick="mySetPeriod('${k}')">${l}</button>`;});
+  sorted.forEach(m=>{const[y,mo]=m.split("-");h+=`<button class="pf-btn ${myPeriod===m?'on':''}" onclick="mySetPeriod('${m}')">${y}년 ${+mo}월</button>`;});
+  document.getElementById("myPfBtns").innerHTML=h;
+}
+function mySetPeriod(p){myPeriod=p;myApplyFilter();}
+function myApplyRange(){
+  const f=document.getElementById("myDFrom").value,t=document.getElementById("myDTo").value;if(!f||!t)return;
+  myPeriod="custom";myApplyFilter();
+}
+function myApplyFilter(){
+  const now=kst(new Date().toISOString());
+  if(myPeriod==="all")myFilteredData=[...allData];
+  else if(myPeriod==="today"){const td=kstDate(new Date().toISOString());myFilteredData=allData.filter(d=>kstDate(d.updated_at)===td);}
+  else if(myPeriod==="7d"){const c=new Date(now.getTime()-7*864e5);myFilteredData=allData.filter(d=>kst(d.updated_at)>=c);}
+  else if(myPeriod==="30d"){const c=new Date(now.getTime()-30*864e5);myFilteredData=allData.filter(d=>kst(d.updated_at)>=c);}
+  else if(myPeriod==="custom"){
+    const f=document.getElementById("myDFrom").value,t=document.getElementById("myDTo").value;
+    if(f&&t){const fd=new Date(f+"T00:00:00"),td=new Date(t+"T23:59:59");myFilteredData=allData.filter(d=>{const k=kst(d.updated_at);return k>=fd&&k<=td});}
+    else myFilteredData=[...allData];
+  } else myFilteredData=allData.filter(d=>kstMonth(d.updated_at)===myPeriod);
+  if(!myFilteredData.length&&allData.length)myFilteredData=allData.slice(-1);
+  myRenderPeriod();myRenderCats();myRender();
+}
+
+// ── 카테고리 필터 (자동 감지) ──
+function myGetCats(){
+  // myFilteredData에서 마녀공장 제품이 속한 카테고리만 추출
+  const cats=new Set();
+  myFilteredData.forEach(snap=>{
+    (snap.products||[]).forEach(p=>{
+      if((p.brand||"").includes("마녀공장"))cats.add(p.category);
+    });
   });
+  return ["전체",...[...cats].sort()];
+}
+function myRenderCats(){
+  const cats=myGetCats();
+  document.getElementById("myCatGrid").innerHTML=cats.map(c=>
+    `<button class="cat-btn ${c===myCat?'on':''}" onclick="mySetCat('${c}')">${c}</button>`
+  ).join("");
+  // 현재 선택 카테고리가 목록에 없으면 전체로
+  if(!cats.includes(myCat))myCat="전체";
+}
+function mySetCat(c){myCat=c;myRenderCats();myRender();}
+
+// ── 뷰 전환 ──
+function mySetView(v){
+  myView=v;
+  document.getElementById("myViewChart").classList.toggle("on",v==="chart");
+  document.getElementById("myViewTable").classList.toggle("on",v==="table");
+  document.getElementById("myChartView").style.display=v==="chart"?"block":"none";
+  document.getElementById("myTableView").style.display=v==="table"?"block":"none";
+  if(v==="table")myRenderTable();
+}
+
+// ── 공통 렌더 ──
+function myRender(){
+  if(myFilteredData.length)document.getElementById("manyoUpdateTime").textContent=fmtFull(myFilteredData[myFilteredData.length-1].updated_at);
+  renderManyoList();
+  updateManyoChart();
+  if(myView==="table")myRenderTable();
+}
+
+// ── 제품 목록 ──
+function getManyoProducts(){
+  if(!myFilteredData.length)return[];
+  const latest=myFilteredData[myFilteredData.length-1];
+  let prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
+  if(myCat!=="전체")prods=prods.filter(p=>p.category===myCat);
+  const seen=new Set();const unique=[];
+  prods.forEach(p=>{const key=p.name+'||'+p.category;if(!seen.has(key)){seen.add(key);unique.push(p);}});
   unique.sort((a,b)=>(a.rank||999)-(b.rank||999));
   return unique;
 }
-
 function renderManyoList(){
   const el=document.getElementById("manyoList");
   const prods=getManyoProducts();
-
-  if(allData.length)document.getElementById("manyoUpdateTime").textContent=`최신: ${fmtFull(allData[allData.length-1].updated_at)}`;
   document.getElementById("manyoCnt").textContent=`(${prods.length})`;
-
   if(!prods.length){el.innerHTML='<div class="ld" style="color:var(--oy-bk3)">마녀공장 제품이 랭킹에 없습니다</div>';return}
-
   el.innerHTML=prods.map((p,i)=>{
     const isSel=manyoSelList.find(s=>matchProd(s,p));
     const si=manyoSelList.findIndex(s=>matchProd(s,p));
@@ -771,55 +866,38 @@ function renderManyoList(){
   }).join("");
   el._p=prods;
 }
-
 function selManyo(i){
-  const prods=document.getElementById("manyoList")._p;
-  if(!prods||!prods[i])return;
+  const prods=document.getElementById("manyoList")._p;if(!prods||!prods[i])return;
   const prod=prods[i];
   const x=manyoSelList.findIndex(s=>matchProd(s,prod));
-  if(x>=0)manyoSelList.splice(x,1);
-  else if(manyoSelList.length<5)manyoSelList.push(prod);
-  renderManyoList();
-  updateManyoChart();
+  if(x>=0)manyoSelList.splice(x,1);else if(manyoSelList.length<5)manyoSelList.push(prod);
+  renderManyoList();updateManyoChart();
 }
 
+// ── 차트 ──
 function updateManyoChart(){
   const cv=document.getElementById("manyoCv");
   const ee=document.getElementById("manyoChE");
   const sub=document.getElementById("manyoChSub");
-
   if(!manyoSelList.length){
     ee.style.display="flex";cv.style.display="none";
     sub.textContent="왼쪽에서 제품을 선택하세요 (최대 5개)";
-    if(manyoChart){manyoChart.destroy();manyoChart=null}
-    return;
+    if(manyoChart){manyoChart.destroy();manyoChart=null}return;
   }
   ee.style.display="none";cv.style.display="block";
 
-  // 데일리 기준: allData에서 하루에 첫 번째 스냅샷만 사용
-  const dailyData=[];
-  const seenDates=new Set();
-  allData.forEach(snap=>{
-    const d=kstDate(snap.updated_at);
-    if(!seenDates.has(d)){seenDates.add(d);dailyData.push(snap);}
-  });
+  // 데일리: 하루 첫 스냅샷
+  const dailyData=[];const seenD=new Set();
+  myFilteredData.forEach(snap=>{const d=kstDate(snap.updated_at);if(!seenD.has(d)){seenD.add(d);dailyData.push(snap);}});
 
   const labels=dailyData.map(d=>{const k=kst(d.updated_at);return`${k.getMonth()+1}/${k.getDate()}`});
-
   const ds=[];
   manyoSelList.forEach((p,i)=>{
-    const rankData=dailyData.map(snap=>{
-      const f=findProd(snap.products||[],p);
-      return f?(f.rank||null):null;
-    });
-    // ghost (순위권 밖 = 105)
+    const rankData=dailyData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
     const ghostData=rankData.map(v=>v!==null?v:105);
-    // 점선
     ds.push({label:'_mg_'+i,data:ghostData,borderColor:MANYO_COLORS[i%5]+'55',borderDash:[4,3],borderWidth:1.5,pointRadius:0,tension:.3,fill:false,spanGaps:true,order:10+i});
-    // 실선
     ds.push({label:trunc(p.name,20)+' ('+p.category+')',data:rankData,borderColor:MANYO_COLORS[i%5],backgroundColor:MANYO_COLORS[i%5]+"10",borderWidth:2.5,pointRadius:4,pointBackgroundColor:MANYO_COLORS[i%5],pointBorderColor:"#fff",pointBorderWidth:2,tension:.3,spanGaps:false,order:i});
   });
-
   sub.textContent=manyoSelList.map(p=>`${trunc(p.name,15)}(${p.category} ${p.rank}위)`).join(' · ');
 
   if(manyoChart)manyoChart.destroy();
@@ -832,17 +910,12 @@ function updateManyoChart(){
         titleFont:{family:"'Noto Sans KR'",weight:"600"},bodyFont:{family:"'Noto Sans KR'"},
         filter:item=>!item.dataset.label.startsWith('_mg_'),
         callbacks:{
-          title:items=>{if(!items.length)return'';const idx=items[0].dataIndex;const snap=dailyData[idx];return snap?fmtFull(snap.updated_at):'';},
+          title:items=>{if(!items.length)return'';const snap=dailyData[items[0].dataIndex];return snap?fmtFull(snap.updated_at):'';},
           label:ctx=>{
-            const rank=ctx.parsed.y;
-            const idx=ctx.dataIndex;
-            const snap=dailyData[idx];
+            const rank=ctx.parsed.y;const snap=dailyData[ctx.dataIndex];
             const pi=manyoSelList.findIndex(p=>ctx.dataset.label.includes(trunc(p.name,20)));
-            if(pi>=0&&snap){
-              const f=findProd(snap.products||[],manyoSelList[pi]);
-              const price=f&&f.price?` · ${f.price}원`:'';
-              return `${ctx.dataset.label}: ${rank>100?'순위권 밖':rank+'위'}${price}`;
-            }
+            if(pi>=0&&snap){const f=findProd(snap.products||[],manyoSelList[pi]);const price=f&&f.price?` · ${f.price}원`:'';
+              return `${ctx.dataset.label}: ${rank>100?'순위권 밖':rank+'위'}${price}`;}
             return `${ctx.dataset.label}: ${rank>100?'순위권 밖':rank+'위'}`;
           }
         }
@@ -852,15 +925,49 @@ function updateManyoChart(){
       y:{reverse:true,min:-1,max:110,
         afterFit:function(axis){axis.paddingTop=30;},
         ticks:{callback:v=>v<=0?'':v>100?'순위권 밖':v+"위",font:{size:11},color:"rgba(21,21,21,.3)",includeBounds:true,autoSkip:false},
-        afterBuildTicks:function(axis){
-          const ticks=axis.ticks.map(t=>t.value);
-          if(!ticks.includes(1)){axis.ticks.unshift({value:1});axis.ticks.sort((a,b)=>a.value-b.value);}
-        },
+        afterBuildTicks:function(axis){const ticks=axis.ticks.map(t=>t.value);if(!ticks.includes(1)){axis.ticks.unshift({value:1});axis.ticks.sort((a,b)=>a.value-b.value);}},
         grid:{color:ctx=>{const v=ctx.tick.value;if(v<=0||v>100)return'transparent';if(v===1)return'rgba(21,21,21,.12)';return"rgba(21,21,21,.04)";}}
       },
       x:{ticks:{font:{size:11},color:"rgba(21,21,21,.3)"},grid:{display:false}}
     }
   }});
+}
+
+// ── 테이블 ──
+function myRenderTable(){
+  const thead=document.getElementById("myThead");
+  const tbody=document.getElementById("myTbody");
+  const tbl=document.getElementById("manyoTable");
+  tbl.className="my-tbl";
+
+  thead.innerHTML='<th>날짜</th><th>시간</th><th>카테고리</th><th>제품</th><th>순위</th><th>가격</th>';
+
+  // myFilteredData에서 마녀공장 제품만, 카테고리 필터 적용, 데일리 첫 스냅샷
+  const dailyData=[];const seenD=new Set();
+  myFilteredData.forEach(snap=>{const d=kstDate(snap.updated_at);if(!seenD.has(d)){seenD.add(d);dailyData.push(snap);}});
+
+  const rows=[];
+  dailyData.forEach(snap=>{
+    const k=kst(snap.updated_at);
+    const dateStr=`${k.getFullYear()}.${k.getMonth()+1}.${k.getDate()}`;
+    const timeStr=`${S(k.getHours())}:${S(k.getMinutes())}`;
+    let prods=(snap.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
+    if(myCat!=="전체")prods=prods.filter(p=>p.category===myCat);
+    prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
+    prods.forEach(p=>{
+      const hue=((p.category||"").charCodeAt(0)*47)%360;
+      rows.push(`<tr>
+        <td>${dateStr}</td>
+        <td>${timeStr}</td>
+        <td><span class="cat-tag" style="background:hsl(${hue},70%,94%);color:hsl(${hue},55%,35%)">${p.category}</span></td>
+        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis">${p.name||''}</td>
+        <td class="rank-cell">${p.rank||'-'}</td>
+        <td style="font-family:'Outfit',sans-serif">${p.price?p.price+'원':'-'}</td>
+      </tr>`);
+    });
+  });
+
+  tbody.innerHTML=rows.length?rows.join(''):'<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--oy-bk3)">데이터가 없습니다</td></tr>';
 }
 </script>
 </body>
