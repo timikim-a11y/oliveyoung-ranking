@@ -426,26 +426,30 @@ function updateChart(){
   if(!cmpMode&&!selProd){empty("📈","왼쪽에서 상품을 선택하세요");sub.textContent="상품을 선택하세요";return}
   ee.style.display="none";cv.style.display="block";
 
-  const labels=fData.map(d=>fmtShort(d.updated_at));
+  // ★ 크롤링 실패 스냅샷 제외: 해당 카테고리 상품이 1개도 없으면 크롤링 실패로 간주
+  const targetCat=cmpMode?cmpList[0].category:selProd.category;
+  const validData=fData.filter(snap=>{
+    const catProds=(snap.products||[]).filter(p=>p.category===targetCat);
+    return catProds.length>0;
+  });
+  if(!validData.length){empty("📈","유효한 데이터가 없습니다");sub.textContent="";return}
+  // 글로벌 저장 (툴팁에서 참조)
+  window._chartData=validData;
+
+  const labels=validData.map(d=>fmtShort(d.updated_at));
 
   if(cmpMode){
-    // 비교모드: 각 상품별 실선 + 순위권 밖 구간 점선
     const ds=[];
     cmpList.forEach((p,i)=>{
-      const rankData=fData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
-      // ghost: 순위권 밖은 105위로 채워서 아래에서 올라오는 형태
+      const rankData=validData.map(snap=>{const f=findProd(snap.products||[],p);return f?(f.rank||null):null;});
       const ghostData=rankData.map(v=>v!==null?v:105);
-      // 점선 (순위권 밖 연결)
       ds.push({label:'_ghost_'+i,data:ghostData,borderColor:CMP_C[i]+'55',borderDash:[4,3],borderWidth:1.5,pointRadius:0,tension:.3,fill:false,spanGaps:true,order:10+i});
-      // 실선 (실제 순위)
       ds.push({label:p.brand,data:rankData,borderColor:CMP_C[i],backgroundColor:CMP_C[i]+"10",borderWidth:2.5,pointRadius:3,pointBackgroundColor:CMP_C[i],tension:.3,spanGaps:false,order:i});
     });
     sub.textContent=cmpList.map(p=>`${p.brand}(${p.rank}위)`).join(' · ');
     drawChart(labels,ds,true);
   } else {
-    // 단일 상품: 순위권=초록 실선, 순위권 밖 구간=회색 점선
-    // null 구간을 채워서 점선으로 연결
-    const rawData=fData.map(snap=>{
+    const rawData=validData.map(snap=>{
       const f=findProd(snap.products||[],selProd);
       return f?{rank:f.rank||null,price:f.price||'',inRank:true}:{rank:null,price:'',inRank:false};
     });
@@ -514,7 +518,7 @@ function drawChart(labels,ds,showLegend,rawData){
           title:items=>{
             if(!items.length)return'';
             const idx=items[0].dataIndex;
-            const snap=fData[idx];
+            const snap=(window._chartData||fData)[idx];
             if(!snap)return items[0].label;
             const d=kst(snap.updated_at);
             return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()} ${S(d.getHours())}:${S(d.getMinutes())}`;
@@ -526,7 +530,7 @@ function drawChart(labels,ds,showLegend,rawData){
               return `${ctx.dataset.label}: ${rank}위`;
             }
             // 단일 모드: 브랜드, 순위, 가격
-            const snap=fData[idx];
+            const snap=(window._chartData||fData)[idx];
             if(snap&&selProd){
               const f=findProd(snap.products||[],selProd);
               if(f){
@@ -541,7 +545,7 @@ function drawChart(labels,ds,showLegend,rawData){
           afterLabel:ctx=>{
             if(cmpMode){
               const idx=ctx.dataIndex;
-              const snap=fData[idx];
+              const snap=(window._chartData||fData)[idx];
               const brandName=ctx.dataset.label;
               const p=cmpList.find(c=>c.brand===brandName);
               if(snap&&p){
@@ -854,7 +858,7 @@ function myApplyFilter(){
 }
 
 // ── 카테고리 필터 (자동 감지) ──
-// "TOTAL": 모든 카테고리의 마녀공장 제품 합산
+// "전체(취합)": 모든 카테고리의 마녀공장 제품 합산
 // "전체랭킹": 랭킹 트래커의 "전체" 카테고리에서만
 // 나머지: 각 개별 카테고리
 function myGetCats(){
@@ -868,7 +872,7 @@ function myGetCats(){
   // "전체"가 있으면 개별 카테고리 목록에서 제거하고 "전체랭킹"으로 별도 배치
   const hasTotal=sorted.includes("전체");
   const others=sorted.filter(c=>c!=="전체");
-  const result=["TOTAL"];
+  const result=["전체(취합)"];
   if(hasTotal)result.push("전체랭킹");
   result.push(...others);
   return result;
@@ -878,7 +882,7 @@ function myRenderCats(){
   document.getElementById("myCatGrid").innerHTML=cats.map(c=>
     `<button class="cat-btn ${c===myCat?'on':''}" onclick="mySetCat('${c}')">${c}</button>`
   ).join("");
-  if(!cats.includes(myCat))myCat="TOTAL";
+  if(!cats.includes(myCat))myCat="전체(취합)";
 }
 function mySetCat(c){myCat=c;myRenderCats();myRender();}
 
@@ -906,7 +910,7 @@ function getManyoProducts(){
   const latest=myFilteredData[myFilteredData.length-1];
   let prods=(latest.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
   // 카테고리 필터
-  if(myCat==="TOTAL"){/* 전체 취합 - 필터 안 함 */}
+  if(myCat==="전체(취합)"){/* 전체 취합 - 필터 안 함 */}
   else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
   else{prods=prods.filter(p=>p.category===myCat);}
   const seen=new Set();const unique=[];
@@ -959,9 +963,19 @@ function updateManyoChart(){
   }
   ee.style.display="none";cv.style.display="block";
 
-  // 데일리: 하루 첫 스냅샷
-  const dailyData=[];const seenD=new Set();
-  myFilteredData.forEach(snap=>{const d=kstDate(snap.updated_at);if(!seenD.has(d)){seenD.add(d);dailyData.push(snap);}});
+  // 데일리: 하루 첫 스냅샷 + 크롤링 실패 제외
+  const dailyDataRaw=[];const seenD=new Set();
+  myFilteredData.forEach(snap=>{const d=kstDate(snap.updated_at);if(!seenD.has(d)){seenD.add(d);dailyDataRaw.push(snap);}});
+
+  // 선택된 제품들의 카테고리에 데이터가 있는 스냅샷만 유지
+  const targetCats=new Set(manyoSelList.map(p=>p.category));
+  const dailyData=dailyDataRaw.filter(snap=>{
+    // 선택된 카테고리 중 하나라도 데이터가 있으면 유지
+    for(const cat of targetCats){
+      if((snap.products||[]).some(p=>p.category===cat))return true;
+    }
+    return false;
+  });
 
   const labels=dailyData.map(d=>{const k=kst(d.updated_at);return`${k.getMonth()+1}/${k.getDate()}`});
   const ds=[];
@@ -1025,7 +1039,7 @@ function myRenderTable(){
     const dateStr=`${k.getFullYear()}.${k.getMonth()+1}.${k.getDate()}`;
     const timeStr=`${S(k.getHours())}:${S(k.getMinutes())}`;
     let prods=(snap.products||[]).filter(p=>(p.brand||"").includes("마녀공장"));
-    if(myCat==="TOTAL"){/* no filter */}
+    if(myCat==="전체(취합)"){/* no filter */}
     else if(myCat==="전체랭킹"){prods=prods.filter(p=>p.category==="전체");}
     else{prods=prods.filter(p=>p.category===myCat);}
     prods.sort((a,b)=>(a.rank||999)-(b.rank||999));
