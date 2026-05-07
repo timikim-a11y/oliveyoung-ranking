@@ -1,48 +1,48 @@
 {
-  "updated_at": "2026-05-07T15:39:44.942655+09:00",
+  "updated_at": "2026-05-07T18:48:59.519522+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
     {
       "brand": "마녀공장",
       "code": "A001924",
-      "likes": 27200,
+      "likes": 27202,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
     },
     {
       "brand": "비플레인",
       "code": "A002833",
-      "likes": 10492,
+      "likes": 10495,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002833"
     },
     {
       "brand": "메이크프렘",
       "code": "A002310",
-      "likes": 8297,
+      "likes": 8298,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002310"
     },
     {
       "brand": "넘버즈인",
       "code": "A003477",
-      "likes": 23927,
+      "likes": 23929,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003477"
     },
     {
       "brand": "메디힐",
       "code": "A000688",
-      "likes": 36839,
+      "likes": 36840,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000688"
     },
     {
       "brand": "아누아",
       "code": "A003377",
-      "likes": 20480,
+      "likes": 20481,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003377"
     },
     {
       "brand": "토리든",
       "code": "A002820",
-      "likes": 28104,
+      "likes": 28106,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002820"
     },
     {
@@ -54,13 +54,13 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": 13579,
+      "likes": 13582,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": 26957,
+      "likes": 26962,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
