@@ -143,6 +143,16 @@ def save_results(data):
     print(f"\n📁 저장: {filepath} ({len(data)}개 브랜드)")
     print(f"📁 최신: {latest_path}")
 
+    # ★ 파일 목록 index 생성 (GitHub API 호출 대체)
+    all_files = sorted([
+        f for f in os.listdir("brand_data")
+        if f.endswith(".json") and f not in ("latest.json", "_index.json", ".gitkeep")
+    ])
+    index_path = os.path.join("brand_data", "_index.json")
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(all_files, f)
+    print(f"📁 인덱스: {index_path} ({len(all_files)}개 파일)")
+
     valid = [d for d in data if d["likes"] is not None]
     failed = [d for d in data if d["likes"] is None]
 
