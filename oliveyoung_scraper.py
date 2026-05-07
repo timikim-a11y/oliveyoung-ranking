@@ -204,8 +204,19 @@ def save_results(data):
     latest_path = os.path.join("data", "latest.json")
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
+
+    # ★ 파일 목록 index 생성 (GitHub API 호출 대체)
+    all_files = sorted([
+        f for f in os.listdir("data")
+        if f.endswith(".json") and f not in ("latest.json", "_index.json", ".gitkeep")
+    ])
+    index_path = os.path.join("data", "_index.json")
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(all_files, f)
     print(f"\n📁 저장: {filepath} ({len(data)}개 상품)")
     print(f"📁 최신: {latest_path}")
+    print(f"📁 인덱스: {index_path} ({len(all_files)}개 파일)")
+
     cat_stats = {}
     for pr in data:
         cat_stats[pr.get("category", "기타")] = cat_stats.get(pr.get("category", "기타"), 0) + 1
