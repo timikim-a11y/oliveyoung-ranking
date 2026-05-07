@@ -290,7 +290,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--oy-b
 <script>
 const GH_USER="timikim-a11y",GH_REPO="oliveyoung-ranking";
 const RAW=`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data`;
-const API=`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/data`;
+// GitHub API 더 이상 사용 안 함 → _index.json 방식으로 대체
 const CATS=["전체","스킨케어","마스크팩","클렌징","선케어","메이크업","네일","뷰티소품","더모코스메틱","맨즈에딧","향수/디퓨저","헤어케어","바디케어","건강식품","푸드","구강용품","헬스/건강용품","위생용품","패션","홈리빙/가전","취미/팬시"];
 const CMP_C=["#151515","#ef4444","#22c55e","#f59e0b","#3b82f6"];
 
@@ -322,20 +322,25 @@ document.addEventListener("DOMContentLoaded",async()=>{
 
 async function load(){
   try{
-    const r=await fetch(API);if(!r.ok)throw 0;
-    const files=await r.json();
-    allFiles=files.filter(f=>f.name.endsWith(".json")&&f.name!=="latest.json"&&f.name!==".gitkeep").sort((a,b)=>a.name.localeCompare(b.name));
-    if(!allFiles.length)throw 0;
-    const toLoad=allFiles.slice(-100);allData=[];
+    // ★ _index.json에서 파일 목록 로드 (GitHub API 호출 대체 → 한도 문제 해결)
+    const r=await fetch(`${RAW}/_index.json?t=${Date.now()}`);
+    if(!r.ok)throw 0;
+    const fileNames=await r.json();
+    if(!fileNames.length)throw 0;
+
+    // 최근 100개 파일만 로드
+    const toLoad=fileNames.slice(-100);
+    allData=[];
     for(let i=0;i<toLoad.length;i+=5){
       const batch=toLoad.slice(i,i+5);
-      const res=await Promise.allSettled(batch.map(f=>fetch(f.download_url).then(r=>r.json())));
+      const res=await Promise.allSettled(batch.map(f=>fetch(`${RAW}/${f}`).then(r=>r.json())));
       res.forEach(r=>{if(r.status==="fulfilled")allData.push(r.value)});
     }
     renderPeriod();applyFilter();
     document.getElementById("ndb").style.display="none";
   }catch(e){
-    try{const r=await fetch(`${RAW}/latest.json`);if(!r.ok)throw 0;const d=await r.json();allData=[d];fData=[d];renderPeriod();showTime(d);renderList();document.getElementById("ndb").style.display="none";}
+    // fallback: latest.json
+    try{const r=await fetch(`${RAW}/latest.json?t=${Date.now()}`);if(!r.ok)throw 0;const d=await r.json();allData=[d];fData=[d];renderPeriod();showTime(d);renderList();document.getElementById("ndb").style.display="none";}
     catch{document.getElementById("ndb").style.display="flex";document.getElementById("rl").innerHTML='<div class="ld" style="color:var(--oy-bk3)">데이터 없음</div>';}
   }
 }
@@ -600,26 +605,26 @@ let brandChart=null;
 let blView="chart", blTableBrand="all";
 
 async function loadBrandData(){
-  const api=`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/brand_data`;
+  const brandRAW=`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/brand_data`;
   try{
-    const r=await fetch(api);if(!r.ok)throw 0;
-    const files=await r.json();
-    const jsons=files.filter(f=>f.name.endsWith(".json")&&f.name!=="latest.json"&&f.name!==".gitkeep").sort((a,b)=>a.name.localeCompare(b.name));
-    if(!jsons.length)throw 0;
+    // ★ _index.json에서 파일 목록 로드
+    const r=await fetch(`${brandRAW}/_index.json?t=${Date.now()}`);
+    if(!r.ok)throw 0;
+    const fileNames=await r.json();
+    if(!fileNames.length)throw 0;
     brandAllData=[];
-    for(let i=0;i<jsons.length;i+=5){
-      const batch=jsons.slice(i,i+5);
-      const res=await Promise.allSettled(batch.map(f=>fetch(f.download_url).then(r=>r.json())));
+    for(let i=0;i<fileNames.length;i+=5){
+      const batch=fileNames.slice(i,i+5);
+      const res=await Promise.allSettled(batch.map(f=>fetch(`${brandRAW}/${f}`).then(r=>r.json())));
       res.forEach(r=>{if(r.status==="fulfilled")brandAllData.push(r.value)});
     }
-    // ★ 마녀공장 자동 선택
     autoSelectManyo();
     renderBrandList();
     updateBrandChart();
     document.getElementById("brandNdb").style.display="none";
   }catch{
     try{
-      const r=await fetch(`https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/brand_data/latest.json`);
+      const r=await fetch(`${brandRAW}/latest.json?t=${Date.now()}`);
       if(!r.ok)throw 0;
       const d=await r.json();brandAllData=[d];
       autoSelectManyo();renderBrandList();updateBrandChart();
