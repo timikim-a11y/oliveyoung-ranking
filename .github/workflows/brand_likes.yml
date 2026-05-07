@@ -16,6 +16,9 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    # 실패 시 최대 3번 재시도
+    strategy:
+      max-parallel: 1
     env:
       TZ: Asia/Seoul
 
@@ -34,10 +37,30 @@ jobs:
           playwright install chromium
           playwright install-deps
 
-      - name: 브랜드 좋아요 크롤링
+      - name: 브랜드 좋아요 크롤링 (1차 시도)
+        id: try1
+        continue-on-error: true
         run: python brand_likes_scraper.py
 
+      - name: 브랜드 좋아요 크롤링 (2차 시도)
+        id: try2
+        if: steps.try1.outcome == 'failure'
+        continue-on-error: true
+        run: |
+          echo "⏳ 1차 실패, 60초 후 재시도..."
+          sleep 60
+          python brand_likes_scraper.py
+
+      - name: 브랜드 좋아요 크롤링 (3차 시도)
+        id: try3
+        if: steps.try2.outcome == 'failure'
+        run: |
+          echo "⏳ 2차 실패, 120초 후 재시도..."
+          sleep 120
+          python brand_likes_scraper.py
+
       - name: 데이터 저장 (자동 커밋)
+        if: steps.try1.outcome == 'success' || steps.try2.outcome == 'success' || steps.try3.outcome == 'success'
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
