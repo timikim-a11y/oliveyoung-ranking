@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-15T12:13:28.357510+09:00",
+  "updated_at": "2026-10-16T12:08:12.905285+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -12,7 +12,7 @@
     {
       "brand": "비플레인",
       "code": "A002833",
-      "likes": null,
+      "likes": 11538,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002833"
     },
     {
@@ -30,7 +30,7 @@
     {
       "brand": "메디힐",
       "code": "A000688",
-      "likes": null,
+      "likes": 39410,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000688"
     },
     {
@@ -48,7 +48,7 @@
     {
       "brand": "닥터지",
       "code": "A000627",
-      "likes": null,
+      "likes": 29432,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000627"
     },
     {
@@ -60,7 +60,7 @@
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": null,
+      "likes": 29251,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
