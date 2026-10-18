@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-10-17T12:01:35.714997+09:00",
+  "updated_at": "2026-10-18T12:03:23.078899+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
     {
       "brand": "마녀공장",
       "code": "A001924",
-      "likes": 27603,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
     },
     {
@@ -54,7 +54,7 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": 15149,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
