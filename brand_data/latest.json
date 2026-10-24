@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T12:24:07.236631+09:00",
+  "updated_at": "2026-10-24T12:18:29.826214+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -42,7 +42,7 @@
     {
       "brand": "토리든",
       "code": "A002820",
-      "likes": 31369,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002820"
     },
     {
@@ -54,13 +54,13 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": null,
+      "likes": 15192,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": 29277,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
