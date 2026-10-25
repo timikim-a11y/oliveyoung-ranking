@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24T12:18:29.826214+09:00",
+  "updated_at": "2026-10-25T12:13:40.266112+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -54,7 +54,7 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": 15192,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
