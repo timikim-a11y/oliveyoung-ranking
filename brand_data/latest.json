@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T12:44:37.732766+09:00",
+  "updated_at": "2026-10-28T13:01:05.980429+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -48,7 +48,7 @@
     {
       "brand": "닥터지",
       "code": "A000627",
-      "likes": null,
+      "likes": 29512,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000627"
     },
     {
