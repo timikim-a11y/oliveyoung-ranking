@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T13:23:23.585142+09:00",
+  "updated_at": "2026-10-31T13:04:26.726851+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -12,13 +12,13 @@
     {
       "brand": "비플레인",
       "code": "A002833",
-      "likes": 11584,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002833"
     },
     {
       "brand": "메이크프렘",
       "code": "A002310",
-      "likes": 11259,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002310"
     },
     {
@@ -30,7 +30,7 @@
     {
       "brand": "메디힐",
       "code": "A000688",
-      "likes": 39561,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000688"
     },
     {
