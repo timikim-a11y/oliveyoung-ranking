@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T13:04:26.726851+09:00",
+  "updated_at": "2026-11-01T13:23:13.816191+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -18,7 +18,7 @@
     {
       "brand": "메이크프렘",
       "code": "A002310",
-      "likes": null,
+      "likes": 11266,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002310"
     },
     {
