@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07T13:39:41.279439+09:00",
+  "updated_at": "2026-11-08T13:26:16.765913+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -18,13 +18,13 @@
     {
       "brand": "메이크프렘",
       "code": "A002310",
-      "likes": 11289,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002310"
     },
     {
       "brand": "넘버즈인",
       "code": "A003477",
-      "likes": 27491,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003477"
     },
     {
@@ -36,7 +36,7 @@
     {
       "brand": "아누아",
       "code": "A003377",
-      "likes": null,
+      "likes": 23629,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003377"
     },
     {
@@ -48,7 +48,7 @@
     {
       "brand": "닥터지",
       "code": "A000627",
-      "likes": 29629,
+      "likes": 29638,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000627"
     },
     {
@@ -60,7 +60,7 @@
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": null,
+      "likes": 29442,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
