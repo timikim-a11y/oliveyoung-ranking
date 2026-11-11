@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T14:59:06.853356+09:00",
+  "updated_at": "2026-11-11T13:44:37.814651+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -24,7 +24,7 @@
     {
       "brand": "넘버즈인",
       "code": "A003477",
-      "likes": null,
+      "likes": 27561,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003477"
     },
     {
