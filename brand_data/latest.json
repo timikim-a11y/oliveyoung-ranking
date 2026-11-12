@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-11-11T13:44:37.814651+09:00",
+  "updated_at": "2026-11-12T14:46:18.131361+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
     {
       "brand": "마녀공장",
       "code": "A001924",
-      "likes": null,
+      "likes": 27659,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
     },
     {
@@ -24,13 +24,13 @@
     {
       "brand": "넘버즈인",
       "code": "A003477",
-      "likes": 27561,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003477"
     },
     {
       "brand": "메디힐",
       "code": "A000688",
-      "likes": null,
+      "likes": 39784,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000688"
     },
     {
@@ -42,7 +42,7 @@
     {
       "brand": "토리든",
       "code": "A002820",
-      "likes": null,
+      "likes": 31653,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002820"
     },
     {
@@ -60,7 +60,7 @@
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": null,
+      "likes": 29469,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
