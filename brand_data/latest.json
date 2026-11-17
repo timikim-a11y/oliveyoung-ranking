@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T13:47:08.084296+09:00",
+  "updated_at": "2026-11-17T15:33:34.695573+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -60,7 +60,7 @@
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": 29500,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
