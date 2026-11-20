@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T14:56:18.376734+09:00",
+  "updated_at": "2026-11-20T14:46:19.785976+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
@@ -12,7 +12,7 @@
     {
       "brand": "비플레인",
       "code": "A002833",
-      "likes": 11680,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002833"
     },
     {
@@ -36,13 +36,13 @@
     {
       "brand": "아누아",
       "code": "A003377",
-      "likes": 23751,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003377"
     },
     {
       "brand": "토리든",
       "code": "A002820",
-      "likes": 31721,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002820"
     },
     {
