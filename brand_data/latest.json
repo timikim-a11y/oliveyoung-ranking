@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-11-21T14:39:13.683121+09:00",
+  "updated_at": "2026-11-22T14:04:16.659148+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
     {
       "brand": "마녀공장",
       "code": "A001924",
-      "likes": null,
+      "likes": 27666,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
     },
     {
@@ -36,7 +36,7 @@
     {
       "brand": "아누아",
       "code": "A003377",
-      "likes": null,
+      "likes": 23776,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003377"
     },
     {
@@ -54,13 +54,13 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": 15475,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": null,
+      "likes": 29523,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
