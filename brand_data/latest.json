@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-11-26T15:50:29.128054+09:00",
+  "updated_at": "2026-11-27T15:45:22.152268+09:00",
   "source": "oliveyoung.co.kr",
   "total_brands": 10,
   "brands": [
     {
       "brand": "마녀공장",
       "code": "A001924",
-      "likes": 27675,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001924"
     },
     {
@@ -18,7 +18,7 @@
     {
       "brand": "메이크프렘",
       "code": "A002310",
-      "likes": 11316,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002310"
     },
     {
@@ -30,19 +30,19 @@
     {
       "brand": "메디힐",
       "code": "A000688",
-      "likes": 39883,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A000688"
     },
     {
       "brand": "아누아",
       "code": "A003377",
-      "likes": 23850,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A003377"
     },
     {
       "brand": "토리든",
       "code": "A002820",
-      "likes": 31773,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002820"
     },
     {
@@ -54,13 +54,13 @@
     {
       "brand": "메디큐브",
       "code": "A001925",
-      "likes": 15513,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A001925"
     },
     {
       "brand": "브링그린",
       "code": "A002253",
-      "likes": 29553,
+      "likes": null,
       "url": "https://www.oliveyoung.co.kr/store/display/getBrandShopDetail.do?onlBrndCd=A002253"
     }
   ]
